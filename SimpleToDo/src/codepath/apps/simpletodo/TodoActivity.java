@@ -31,6 +31,9 @@ public class TodoActivity extends Activity {
     setContentView(R.layout.activity_todo);
     lvItems = (ListView)findViewById(R.id.lvItems);
     readItems();
+    if(items == null){
+      items = new ArrayList<String>();
+    }
     itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
     lvItems.setAdapter(itemsAdapter);
     setupListViewListener();
