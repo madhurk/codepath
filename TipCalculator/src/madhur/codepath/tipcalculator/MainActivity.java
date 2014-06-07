@@ -40,20 +40,22 @@ public class MainActivity extends Activity {
     
     EditText etAmount = (EditText)findViewById(R.id.etAmount);
     String amountStr = etAmount.getText().toString();
-    
-    if(amountStr == null || amountStr.trim().length() == 0)
+    TextView tvTip = (TextView)findViewById(R.id.tvTipAmount);
+
+    if(amountStr == null || amountStr.trim().length() == 0){
+      tvTip.setText("");
       return;
+    }
     
     float amount;
     try{
       amount = Float.parseFloat(amountStr);
     }catch(NumberFormatException ne){
+      tvTip.setText("");
       return;
     }
     
-    float tipAmount = amount*tipPercent/100;
-    
-    TextView tvTip = (TextView)findViewById(R.id.tvTipAmount);
+    float tipAmount = amount*tipPercent/100;    
     tvTip.setText(String.valueOf(tipAmount));
   }
 }
