@@ -1,8 +1,10 @@
 package madhur.codepath.tipcalculator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,6 +17,13 @@ public class MainActivity extends Activity {
   }
   
   public void calculateTip(View v){
+    
+    InputMethodManager inputManager = (InputMethodManager)
+        getSystemService(Context.INPUT_METHOD_SERVICE); 
+
+    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+           InputMethodManager.HIDE_NOT_ALWAYS);
+    
     int id = v.getId();
     float tipPercent = 0;
     switch(id){
@@ -31,7 +40,17 @@ public class MainActivity extends Activity {
     
     EditText etAmount = (EditText)findViewById(R.id.etAmount);
     String amountStr = etAmount.getText().toString();
-    float amount = Float.parseFloat(amountStr);
+    
+    if(amountStr == null || amountStr.trim().length() == 0)
+      return;
+    
+    float amount;
+    try{
+      amount = Float.parseFloat(amountStr);
+    }catch(NumberFormatException ne){
+      return;
+    }
+    
     float tipAmount = amount*tipPercent/100;
     
     TextView tvTip = (TextView)findViewById(R.id.tvTipAmount);
