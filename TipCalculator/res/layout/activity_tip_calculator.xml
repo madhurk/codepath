@@ -122,7 +122,7 @@ app:font="alexis"
         android:layout_alignLeft="@+id/tvTipPercentLable"
         android:layout_marginTop="15dp"
         android:layout_below="@+id/tvTipPercentLable"        
-        android:text="@string/tip_percent_label" />
+        android:text="@string/tip_amount_label" />
 
     <View
         android:layout_width="fill_parent"

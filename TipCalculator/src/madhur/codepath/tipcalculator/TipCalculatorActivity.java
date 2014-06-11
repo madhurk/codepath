@@ -30,8 +30,9 @@ public class TipCalculatorActivity extends Activity {
     Button btnMinus = (Button) findViewById(R.id.btn_minus);
     btnMinus.setOnClickListener(tipListener);
     
-    EditText edittext = (EditText) findViewById(R.id.etAmount);
-    edittext.setOnKeyListener(tipListener);
+    EditText etAmount = (EditText) findViewById(R.id.etAmount);
+    etAmount.setOnKeyListener(tipListener);
+    etAmount.setOnFocusChangeListener(tipListener);
     
     EditText etTipPercent = (EditText) findViewById(R.id.etTipPercent);
     etTipPercent.setOnKeyListener(tipListener);
@@ -39,30 +40,17 @@ public class TipCalculatorActivity extends Activity {
     
     if(savedInstanceState != null){
       
-      int tipPercent=-1;
-      float amount=-1;
-      
       if(savedInstanceState.getSerializable("tip") != null){
         String tipVal = (String)savedInstanceState.getSerializable("tip");
         ((EditText)findViewById(R.id.etTipPercent)).setText(tipVal);
-        try{
-          tipPercent = Integer.parseInt(tipVal);
-        }catch(NumberFormatException nfe){
-          ;
-        }
       }
       
       if(savedInstanceState.getSerializable("amount") != null){
         String amountStr = (String)savedInstanceState.getSerializable("amount");
         ((EditText)findViewById(R.id.etAmount)).setText(amountStr);
-        try{
-          amount = Float.parseFloat(amountStr);
-        }catch(NumberFormatException nfe){
-          ;
-        }
       }
       
-      tipListener.calculateTip(tipPercent, amount);
+      tipListener.calculateTip();
     }
   }
 
@@ -87,7 +75,18 @@ public class TipCalculatorActivity extends Activity {
       int id = v.getId();
       EditText etTip = (EditText) findViewById(R.id.etTipPercent);
       String prevValStr = etTip.getText().toString();
-      int prevVal = Integer.parseInt(prevValStr);
+      
+      if(prevValStr == null || prevValStr.trim().length() == 0){
+        prevValStr = "0";
+      }
+                  
+      int prevVal;      
+      try{
+        prevVal = Integer.parseInt(prevValStr);
+      }catch(NumberFormatException nfe){
+        prevVal = 0;
+      }
+      
       int newVal = prevVal;
       if (id == ((Button) findViewById(R.id.btn_minus)).getId()) {
         newVal = prevVal - 5;
@@ -99,24 +98,32 @@ public class TipCalculatorActivity extends Activity {
           newVal = 100;
       }
       etTip.setText(String.valueOf(newVal));
-      calculateTip(newVal, -1);
+      calculateTip();
     }
 
-    private void calculateTip(int tipPercent, float amount) {
+    private void calculateTip() {
+      
       EditText etAmount = (EditText) findViewById(R.id.etAmount);
-      String amountStr = etAmount.getText().toString();      
+      String amountStr = etAmount.getText().toString();  
+      float amount;
+      int tipPercent;
       try {
         amount = Float.parseFloat(amountStr);
       } catch (NumberFormatException nfe) {
         amount = -1;
       }
       
-      if(tipPercent == -1)
-        amount = -1;
+      EditText etTip = (EditText) findViewById(R.id.etTipPercent);
+      String tipStr = etTip.getText().toString();
+      try{
+        tipPercent = Integer.parseInt(tipStr);
+      }catch(NumberFormatException nfe){
+        tipPercent = 0;
+      }
 
       TextView tvTipAmount = (TextView) findViewById(R.id.tvTipAmount);
       TextView tvTotalAmount = (TextView) findViewById(R.id.tvTotalAmount);
-      if (amount > 0) {
+      if (amount > -1) {
         float tip = amount * tipPercent / 100;
         tvTipAmount.setText(String.valueOf(tip));
         tvTotalAmount.setText(String.valueOf(tip + amount));
@@ -140,11 +147,8 @@ public class TipCalculatorActivity extends Activity {
       if ((event.getAction() == KeyEvent.ACTION_DOWN) && 
           (keyCode == KeyEvent.KEYCODE_ENTER)) {
 
+        calculateTip();
         EditText etTip = (EditText) findViewById(R.id.etTipPercent);
-        String prevValStr = etTip.getText().toString();
-        int tipPercent = Integer.parseInt(prevValStr);                
-        calculateTip(tipPercent, -1);
-        
         if(v.getId() == etTip.getId()){
           findViewById(R.id.dummyView).requestFocus();
           hideKeyboard();
@@ -163,6 +167,10 @@ public class TipCalculatorActivity extends Activity {
         }else{
           ((Button)findViewById(R.id.btn_minus)).setVisibility(View.INVISIBLE);
           ((Button)findViewById(R.id.btn_plus)).setVisibility(View.INVISIBLE);          
+        }
+      }else if(v.getId() == findViewById(R.id.etAmount).getId()){
+        if(!hasFocus){
+          calculateTip();
         }
       }
     }
