@@ -5,14 +5,47 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
-    <ImageView
-        android:id="@+id/ivBackgroundImage"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:scaleType="centerCrop"
-        android:layout_alignParentTop="true" android:src="@drawable/paper"/>
-    
+    <RelativeLayout  
+        android:id="@+id/header_layout" 
+        android:background="@color/white" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"> 
+	<madhur.codepath.tipcalculator.FontTextView
+		app:font="playball"
+		style="@style/Caption"
+        android:id="@+id/tvCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"        
+        android:text="Guest Check" />
+	
+	    <View
+        android:id="@+id/captionSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@id/tvCaption"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/darker_gray" />	    
+	</RelativeLayout>
+	
+    <RelativeLayout  
+        android:id="@+id/main_layout"         
+        android:background="@color/check_green" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_layout">
+               
+       <madhur.codepath.tipcalculator.FontTextView
+	app:font="alexis"
+        android:id="@+id/tvAmountLabel"
+        style="@style/Default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        android:text="Amount" />
+       
     <EditText
         android:id="@+id/etAmount"
         android:gravity="center"        
@@ -139,46 +172,21 @@ app:font="alexis"
             android:layout_below="@id/tvTotalAmount"
             android:layout_marginTop="5dp"
             android:background="@android:color/darker_gray" />
+        </RelativeLayout>
         
-<madhur.codepath.tipcalculator.FontTextView
-app:font="playball"
-        android:id="@+id/tvCaption"
-        android:layout_below="@+id/bottomSeparator"        
-        android:layout_width="wrap_content"
+        
+            <RelativeLayout  
+        android:background="@color/white" 
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_alignRight="@+id/etAmount"        
-        android:text="Thank You!" />
-
-            
-	<madhur.codepath.tipcalculator.FontTextView
+        android:layout_below="@+id/main_layout">
+<madhur.codepath.tipcalculator.FontTextView    
 		app:font="playball"
-		style="@style/Caption"
-        android:id="@+id/tvCaption"
+        android:id="@+id/tvFooter"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
         android:layout_marginTop="25dp"
-        android:text="Guest Check" />
-    
-    <View
-        android:id="@+id/captionSeparator"
-        android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:layout_below="@id/tvCaption"
-        android:layout_marginTop="15dp"
-        android:background="@android:color/darker_gray" />
-
-<madhur.codepath.tipcalculator.FontTextView
-app:font="alexis"
-        android:id="@+id/tvAmountLabel"
-        style="@style/Default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvCaption"
-        android:layout_marginTop="36dp"
-        android:layout_toLeftOf="@+id/tvCaption"
-        android:text="Amount" />
-
+        android:layout_centerHorizontal="true"        
+        android:text="Thank You. Please use this app again!" />
+</RelativeLayout>
 </RelativeLayout>
