@@ -97,19 +97,19 @@ app:font="alexis"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/tvTipPercentLable"
-        android:layout_marginTop="5dp"
         android:background="@android:color/darker_gray" />
 
 <madhur.codepath.tipcalculator.FontTextView
 app:font="alexis"
-
         style="@style/Default"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:id="@+id/tvTotalAmountLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvTipAmountLabel"
         android:layout_below="@+id/tvTipAmountLabel"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:text="Total Amount" />
 
 
@@ -124,25 +124,12 @@ app:font="alexis"
         android:layout_below="@+id/tvTipPercentLable"        
         android:text="Tip Amount" />
 
-<madhur.codepath.tipcalculator.FontTextView
-app:font="alexis"
-        style="@style/Default"
-        android:id="@+id/tvNumPeople"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvTipPercentLable"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/tvTipPercentLable"        
-        android:text="Tip Amount" />
-
-
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/tvTipAmountLabel"
         android:layout_marginTop="5dp"
         android:background="@android:color/darker_gray" />
-
 
     <TextView
         style="@style/ValuesTextAppearance"
@@ -168,9 +155,9 @@ app:font="alexis"
         <View
             android:id="@+id/bottomSeparator"
             android:layout_width="fill_parent"
-            android:layout_height="5dp"
+            android:layout_height="5dp"            
             android:layout_below="@id/tvTotalAmount"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:background="@android:color/darker_gray" />
         </RelativeLayout>
         
@@ -182,11 +169,12 @@ app:font="alexis"
         android:layout_below="@+id/main_layout">
 <madhur.codepath.tipcalculator.FontTextView    
 		app:font="playball"
+		android:textSize="22sp"
         android:id="@+id/tvFooter"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"        
-        android:text="Thank You. Please use this app again!" />
+        android:text="Thank You. Please visit us again!" />
 </RelativeLayout>
 </RelativeLayout>

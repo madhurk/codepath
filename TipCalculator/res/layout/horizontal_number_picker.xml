@@ -9,7 +9,6 @@
 	android:layout_width="30sp"
 	android:layout_height="30sp"
 	android:background="@drawable/round_button_minus"
-	android:gravity="center_vertical|center_horizontal"
 	android:text="-"
 	android:visibility="invisible"
 	android:textColor="#fff" />
@@ -31,7 +30,6 @@
 	android:layout_width="30sp"
 	android:layout_height="30sp"
 	android:background="@drawable/round_button_plus"
-	android:gravity="center_vertical|center_horizontal"
 	android:text="+"
  	android:visibility="invisible"
 	android:textColor="#fff" />
