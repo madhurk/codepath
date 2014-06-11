@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"        
-        android:text="Guest Check" />
+        android:text="@string/header" />
 	
 	    <View
         android:id="@+id/captionSeparator"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="25dp"
-        android:text="Amount" />
+        android:text="@string/amount_label" />
        
     <EditText
         android:id="@+id/etAmount"
@@ -91,7 +91,7 @@ app:font="alexis"
         android:layout_alignLeft="@+id/tvAmountLabel"
         android:layout_below="@+id/etAmount"
         android:layout_marginTop="25dp"
-        android:text="Tip Percent" />
+        android:text="@string/tip_percent_label" />
         
     <View
         android:layout_width="fill_parent"
@@ -110,7 +110,7 @@ app:font="alexis"
         android:layout_alignLeft="@+id/tvTipAmountLabel"
         android:layout_below="@+id/tvTipAmountLabel"
         android:layout_marginTop="25dp"
-        android:text="Total Amount" />
+        android:text="@string/total_amount_label" />
 
 
 <madhur.codepath.tipcalculator.FontTextView
@@ -122,7 +122,7 @@ app:font="alexis"
         android:layout_alignLeft="@+id/tvTipPercentLable"
         android:layout_marginTop="15dp"
         android:layout_below="@+id/tvTipPercentLable"        
-        android:text="Tip Amount" />
+        android:text="@string/tip_percent_label" />
 
     <View
         android:layout_width="fill_parent"
@@ -175,6 +175,6 @@ app:font="alexis"
         android:layout_height="match_parent"
         android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"        
-        android:text="Thank You. Please visit us again!" />
+        android:text="@string/footer" />
 </RelativeLayout>
 </RelativeLayout>

@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme" 
         android:name=".App" >
         <activity
-            android:name="madhur.codepath.tipcalculator.MainActivity"
+            android:name="madhur.codepath.tipcalculator.TipCalculatorActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

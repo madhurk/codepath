@@ -3,6 +3,13 @@
 
     <string name="app_name">TipCalculator</string>
     <string name="hello_world">Hello world!</string>
+    <string name="header">Guest Check</string>
+    <string name="footer">Thank You. Please visit us again!"</string>
+    <string name="amount_label">Amount</string>
+    <string name="tip_percent_label">Tip Percent</string>
+    <string name="tip_amount_label">Tip Amount</string>
+    <string name="total_amount_label">Total Amount</string>
+    
     <color name="check_green">#B6DDC8</color>
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FFFF01</color>
