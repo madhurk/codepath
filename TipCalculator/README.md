@@ -31,3 +31,8 @@ http://mobile.cs.fsu.edu/creating-a-simple-compound-component-in-android/
 
 -Implementing custom attributes for your widgets:  
 http://kevindion.com/2011/01/custom-xml-attributes-for-android-widgets/
+
+Demo:  
+
+![tip calculator demo](tip_calculator.gif "Tip Calculator Demo")
+
