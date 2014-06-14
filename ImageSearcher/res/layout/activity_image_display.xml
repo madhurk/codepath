@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+
+	<com.loopj.android.image.SmartImageView
+	    android:id="@+id/ivResult"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:maxWidth="600dp"
+	    android:layout_alignParentTop="true"
+	    android:src="@android:drawable/screen_background_light" />
+
+</RelativeLayout>
