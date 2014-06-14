@@ -57,30 +57,35 @@ public class SearchActivity extends Activity {
   }
   
   public void onSearch(View v){
-    doSearch(null);
+    doSearch();
   }
   
-  public void doSearch(ImageSeachParams params){
+  public void doSearch(){
     String query = etQuery.getText().toString();
     String queryEncoded = Uri.encode(query);
         
     StringBuilder sb = new StringBuilder("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&");
     String apiUrl = null;
-    if(params == null){
-      apiUrl = sb.append("rsz=8&").append("start=0&").append("q=").append(queryEncoded).toString();
-    }else{
+
       sb.append("rsz=8&").append("start=0&");
-      if(apply(params.color) )
-        sb.append("imgcolor=").append(params.color).append("&");
-      if(apply(params.size))
-        sb.append("imgsz=").append(params.size).append("&");
-      if(apply(params.type))
-        sb.append("imgtype=").append(params.type).append("&");
-      if(apply(params.site))
-        sb.append("as_sitesearch=").append(params.site).append("&");      
+      String color = SearchSettings.getSetting(this, SearchSettings.colorFilter); 
+      if(valid(color))
+        sb.append("imgcolor=").append(color).append("&");
+      
+      String size = SearchSettings.getSetting(this, SearchSettings.sizeFilter); 
+      if(valid(size))
+        sb.append("imgsz=").append(size).append("&");
+      
+      String type = SearchSettings.getSetting(this, SearchSettings.typeFilter); 
+      if(valid(type))
+        sb.append("imgtype=").append(type).append("&");
+      
+      String site = SearchSettings.getSetting(this, SearchSettings.siteFilter); 
+      if(valid(site))
+        sb.append("as_sitesearch=").append(site).append("&");      
       
       apiUrl = sb.append("q=").append(queryEncoded).toString();
-    }
+
     
     AsyncHttpClient httpClient = new AsyncHttpClient();
     httpClient.get(apiUrl, new JsonHttpResponseHandler(){
@@ -99,7 +104,7 @@ public class SearchActivity extends Activity {
     });
   }
   
-  private boolean apply(String val){
+  private boolean valid(String val){
     if(val != null && val.trim().length() > 0 && !"all".equalsIgnoreCase(val))
       return true;
     
@@ -122,8 +127,8 @@ public class SearchActivity extends Activity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     
     if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE) {
-      ImageSeachParams params = (ImageSeachParams)data.getSerializableExtra("params");
-      doSearch(params);
+      //ImageSeachParams params = (ImageSeachParams)data.getSerializableExtra("params");
+      doSearch();
     }
   } 
   
