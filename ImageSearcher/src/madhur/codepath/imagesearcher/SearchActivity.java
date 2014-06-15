@@ -44,8 +44,17 @@ public class SearchActivity extends Activity {
     imageAdapter = new ImageResultArrayAdapter(this, imageResults);
     gvSearchResults.setAdapter(imageAdapter);
     
+    gvSearchResults.setOnScrollListener(new EndlessScrollListener() {
+      @Override
+      public void onLoadMore(int page, int totalItemsCount) {
+          // Triggered only when new data needs to be appended to the list
+          // Add whatever code is needed to append new items to your AdapterView
+          //customLoadMoreDataFromApi(page); 
+          customLoadMoreDataFromApi(totalItemsCount); 
+      }
+      });
+    
     gvSearchResults.setOnItemClickListener(new OnItemClickListener() {
-
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getApplicationContext(), ImageDisplayActivity.class);
@@ -56,37 +65,51 @@ public class SearchActivity extends Activity {
     });
   }
   
-  public void onSearch(View v){
-    doSearch();
+  public void customLoadMoreDataFromApi(int offset) {
+    // This method probably sends out a network request and appends new data items to your adapter. 
+    // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
+    // Deserialize API response and then construct new objects to append to the adapter
+    doSearch(offset);
   }
   
-  public void doSearch(){
+  public void onSearch(View v){
+    imageAdapter.clear();
+    int offset = 0;
+    doSearch(offset);
+  }
+  
+  public void doSearch(int offset){
     String query = etQuery.getText().toString();
     String queryEncoded = Uri.encode(query);
-        
+
     StringBuilder sb = new StringBuilder("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&");
     String apiUrl = null;
 
-      sb.append("rsz=8&").append("start=0&");
-      String color = SearchSettings.getSetting(this, SearchSettings.colorFilter); 
-      if(valid(color))
-        sb.append("imgcolor=").append(color).append("&");
-      
-      String size = SearchSettings.getSetting(this, SearchSettings.sizeFilter); 
-      if(valid(size))
-        sb.append("imgsz=").append(size).append("&");
-      
-      String type = SearchSettings.getSetting(this, SearchSettings.typeFilter); 
-      if(valid(type))
-        sb.append("imgtype=").append(type).append("&");
-      
-      String site = SearchSettings.getSetting(this, SearchSettings.siteFilter); 
-      if(valid(site))
-        sb.append("as_sitesearch=").append(site).append("&");      
-      
-      apiUrl = sb.append("q=").append(queryEncoded).toString();
+    int pageSize = 8;
+    //int start = (offset / pageSize);
+    Toast.makeText(this, "loading items from = " + offset, Toast.LENGTH_SHORT).show();
+    sb.append("rsz=").append(pageSize).append("&");
+    sb.append("start=").append(offset).append("&");
 
-    
+    String color = SearchSettings.getSetting(this, SearchSettings.colorFilter); 
+    if(valid(color))
+      sb.append("imgcolor=").append(color).append("&");
+
+    String size = SearchSettings.getSetting(this, SearchSettings.sizeFilter); 
+    if(valid(size))
+      sb.append("imgsz=").append(size).append("&");
+
+    String type = SearchSettings.getSetting(this, SearchSettings.typeFilter); 
+    if(valid(type))
+      sb.append("imgtype=").append(type).append("&");
+
+    String site = SearchSettings.getSetting(this, SearchSettings.siteFilter); 
+    if(valid(site))
+      sb.append("as_sitesearch=").append(site).append("&");      
+
+    apiUrl = sb.append("q=").append(queryEncoded).toString();
+
+
     AsyncHttpClient httpClient = new AsyncHttpClient();
     httpClient.get(apiUrl, new JsonHttpResponseHandler(){
       @Override
@@ -94,7 +117,6 @@ public class SearchActivity extends Activity {
         JSONArray jsonImageResults = null;
         try{
           jsonImageResults = response.getJSONObject("responseData").getJSONArray("results");
-          imageAdapter.clear();
           imageAdapter.addAll(ImageResult.fromJsonArray(jsonImageResults));
         }catch(JSONException e){
           Toast.makeText(getApplicationContext(), "Error parsing results from google", Toast.LENGTH_SHORT).show();
@@ -103,7 +125,7 @@ public class SearchActivity extends Activity {
       }      
     });
   }
-  
+
   private boolean valid(String val){
     if(val != null && val.trim().length() > 0 && !"all".equalsIgnoreCase(val))
       return true;
@@ -128,7 +150,8 @@ public class SearchActivity extends Activity {
     
     if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE) {
       //ImageSeachParams params = (ImageSeachParams)data.getSerializableExtra("params");
-      doSearch();
+      imageAdapter.clear();
+      doSearch(0);
     }
   } 
   
