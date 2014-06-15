@@ -12,6 +12,10 @@ import com.loopj.android.image.SmartImageView;
 
 public class ImageResultArrayAdapter extends ArrayAdapter<ImageResult> {
 
+  private static class ViewHolder {
+    SmartImageView siv;
+  }
+
   public ImageResultArrayAdapter(Context context, List<ImageResult> imageResults) {
     super(context, R.layout.item_image_result, imageResults);    
   }
@@ -19,18 +23,20 @@ public class ImageResultArrayAdapter extends ArrayAdapter<ImageResult> {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     ImageResult image = getItem(position);
-    SmartImageView ivImage;
     
+    ViewHolder viewHolder;
     if (convertView == null) {
+      viewHolder = new ViewHolder();
       LayoutInflater inflator = LayoutInflater.from(getContext());
-      ivImage = (SmartImageView)inflator.inflate(R.layout.item_image_result, parent, false);
+      convertView = inflator.inflate(R.layout.item_image_result, parent, false);
+      viewHolder.siv = (SmartImageView)convertView.findViewById(R.id.ivGridImage);
+      convertView.setTag(viewHolder);
     }else{
-      ivImage = (SmartImageView)convertView;
-      ivImage.setImageResource(android.R.color.transparent);
+      viewHolder = (ViewHolder)convertView.getTag();
     }
     
-    ivImage.setImageUrl(image.thumbUrl);
-    return ivImage;
+    viewHolder.siv.setImageUrl(image.thumbUrl);
+    return convertView;
   }
   
 }
