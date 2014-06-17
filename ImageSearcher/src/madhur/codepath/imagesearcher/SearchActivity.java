@@ -16,19 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class SearchActivity extends Activity {
 
-  EditText etQuery;
-  Button btnSearch;
   GridView gvSearchResults;
+  String currentQuery;
   
   List<ImageResult> imageResults = new ArrayList<ImageResult>();
   ImageResultArrayAdapter imageAdapter;
@@ -69,17 +67,13 @@ public class SearchActivity extends Activity {
     // This method probably sends out a network request and appends new data items to your adapter. 
     // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
     // Deserialize API response and then construct new objects to append to the adapter
-    doSearch(offset);
+    doSearch(null, offset);
   }
   
-  public void onSearch(View v){
-    imageAdapter.clear();
-    int offset = 0;
-    doSearch(offset);
-  }
-  
-  public void doSearch(int offset){
-    String query = etQuery.getText().toString();
+  public void doSearch(String query, int offset){
+    //String query = etQuery.getText().toString();
+    if(query == null)
+      query = currentQuery;
     String queryEncoded = Uri.encode(query);
 
     StringBuilder sb = new StringBuilder("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&");
@@ -87,7 +81,7 @@ public class SearchActivity extends Activity {
 
     int pageSize = 8;
     //int start = (offset / pageSize);
-    Toast.makeText(this, "loading items from = " + offset, Toast.LENGTH_SHORT).show();
+    //Toast.makeText(this, "loading items from = " + offset, Toast.LENGTH_SHORT).show();
     sb.append("rsz=").append(pageSize).append("&");
     sb.append("start=").append(offset).append("&");
 
@@ -114,12 +108,16 @@ public class SearchActivity extends Activity {
     httpClient.get(apiUrl, new JsonHttpResponseHandler(){
       @Override
       public void onSuccess(JSONObject response){
+        
+        if(response == null)
+          return;
+        
         JSONArray jsonImageResults = null;
         try{
           jsonImageResults = response.getJSONObject("responseData").getJSONArray("results");
           imageAdapter.addAll(ImageResult.fromJsonArray(jsonImageResults));
         }catch(JSONException e){
-          Toast.makeText(getApplicationContext(), "Error parsing results from google", Toast.LENGTH_SHORT).show();
+          //Toast.makeText(getApplicationContext(), "Error parsing results from google", Toast.LENGTH_SHORT).show();
           e.printStackTrace();
         }
       }      
@@ -134,24 +132,41 @@ public class SearchActivity extends Activity {
   }
   
   private void setupViews(){
-    etQuery = (EditText)findViewById(R.id.etQueryTerm);
-    btnSearch = (Button)findViewById(R.id.btnSearch);
     gvSearchResults = (GridView)findViewById(R.id.gvSearchResults);
   }
   
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-      getMenuInflater().inflate(R.menu.search_menu, menu);
-      return true;
+    getMenuInflater().inflate(R.menu.search_menu, menu);
+
+    MenuItem searchItem = menu.findItem(R.id.action_search);
+    SearchView searchView = (SearchView) searchItem.getActionView();
+    searchView.setOnQueryTextListener(new OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        imageAdapter.clear();
+        int offset = 0;
+        currentQuery = query;
+        doSearch(query, offset);
+        return true;
+      }
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
+
+    return super.onCreateOptionsMenu(menu);
   }
-  
+
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     
     if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE) {
       //ImageSeachParams params = (ImageSeachParams)data.getSerializableExtra("params");
       imageAdapter.clear();
-      doSearch(0);
+      doSearch(null, 0);
     }
   } 
   
