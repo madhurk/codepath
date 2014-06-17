@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ImageSearcher</string>
+    <string name="app_name">Image Searcher</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_image_display">ImageDisplayActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_image_display">Full Image</string>
+    <string name="title_activity_settings">Search Settings</string>
 
     <string name="size_prompt">Select Size</string>
     
