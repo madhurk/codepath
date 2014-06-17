@@ -74,6 +74,10 @@ public class SearchActivity extends Activity {
     //String query = etQuery.getText().toString();
     if(query == null)
       query = currentQuery;
+    
+    if(query == null || query.trim().length() == 0)
+      return;
+    
     String queryEncoded = Uri.encode(query);
 
     StringBuilder sb = new StringBuilder("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&");
