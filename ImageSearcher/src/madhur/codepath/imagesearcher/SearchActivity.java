@@ -61,6 +61,16 @@ public class SearchActivity extends Activity {
         startActivity(i);
       }
     });
+    
+    if(savedInstanceState != null){
+      currentQuery = savedInstanceState.getString("query");
+    }
+  }
+  
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    outState.putString("query", currentQuery);
+    super.onSaveInstanceState(outState);
   }
   
   public void customLoadMoreDataFromApi(int offset) {
@@ -161,6 +171,11 @@ public class SearchActivity extends Activity {
       }
     });
 
+    if(currentQuery != null){
+      searchItem.expandActionView();
+      searchView.setQuery(currentQuery, true);      
+    }
+    
     return super.onCreateOptionsMenu(menu);
   }
 
