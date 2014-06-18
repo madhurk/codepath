@@ -27,8 +27,11 @@ public class ImageDisplayActivity extends Activity {
     Intent i = getIntent();
     ImageResult image = (ImageResult)i.getSerializableExtra("image");
     
+    int notFoundImgId = getResources().getIdentifier("default_image" , 
+        "drawable", getPackageName());
+
     SmartImageView iv = (SmartImageView)findViewById(R.id.ivResult);
-    iv.setImageUrl(image.fullUrl);
+    iv.setImageUrl(image.fullUrl, notFoundImgId);
     fullUrl = image.fullUrl;
   }
   
