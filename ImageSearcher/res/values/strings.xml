@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_image_display">Full Image</string>
     <string name="title_activity_settings">Search Settings</string>
+    <string name="search_hint">Search for images</string>
 
     <string name="size_prompt">Select Size</string>
     

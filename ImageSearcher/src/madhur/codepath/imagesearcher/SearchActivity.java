@@ -8,9 +8,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.SearchView.OnSuggestionListener;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -66,6 +70,30 @@ public class SearchActivity extends Activity {
     if(savedInstanceState != null){
       currentQuery = savedInstanceState.getString("query");
     }
+    
+    // Get the intent, verify the action and get the query
+    handleIntent(getIntent());
+  }
+  
+  @Override
+  protected void onNewIntent(Intent intent) {
+      //Toast.makeText(this, "got new intent", Toast.LENGTH_SHORT).show();
+      setIntent(intent);
+      handleIntent(intent);
+  }
+
+  private void handleIntent(Intent intent) {
+      if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        
+        String query = intent.getStringExtra(SearchManager.QUERY);
+        currentQuery = query;
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+            MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query, null);
+        
+        imageAdapter.clear();
+        doSearch(query, 0);
+      }
   }
   
   @Override
@@ -75,20 +103,14 @@ public class SearchActivity extends Activity {
   }
   
   public void customLoadMoreDataFromApi(int offset) {
-    // This method probably sends out a network request and appends new data items to your adapter. 
-    // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
-    // Deserialize API response and then construct new objects to append to the adapter
-    doSearch(null, offset);
+    doSearch(currentQuery, offset);
   }
   
   public void doSearch(String query, int offset){
-    //String query = etQuery.getText().toString();
-    if(query == null)
-      query = currentQuery;
-    
     if(query == null || query.trim().length() == 0)
       return;
     
+    setTitle(query);
     String queryEncoded = Uri.encode(query);
 
     StringBuilder sb = new StringBuilder("https://ajax.googleapis.com/ajax/services/search/images?v=1.0&");
@@ -172,29 +194,45 @@ public class SearchActivity extends Activity {
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.search_menu, menu);
 
-    MenuItem searchItem = menu.findItem(R.id.action_search);
+    final MenuItem searchItem = menu.findItem(R.id.action_search);
     SearchView searchView = (SearchView) searchItem.getActionView();
-    searchView.setOnQueryTextListener(new OnQueryTextListener() {
+    
+    // Get the SearchView and set the searchable configuration
+    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    
+    // Assumes current activity is the searchable activity
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+    
+    searchView.setOnSuggestionListener(new OnSuggestionListener() {
+      
       @Override
-      public boolean onQueryTextSubmit(String query) {
-        imageAdapter.clear();
-        int offset = 0;
-        currentQuery = query;
-        doSearch(query, offset);
-        return true;
+      public boolean onSuggestionSelect(int position) {
+        return false;
       }
-
+      
       @Override
-      public boolean onQueryTextChange(String newText) {
+      public boolean onSuggestionClick(int position) {
+        if (searchItem != null) {
+          searchItem.collapseActionView();
+        }
         return false;
       }
     });
-
-    if(currentQuery != null){
-      searchItem.expandActionView();
-      searchView.setQuery(currentQuery, true);      
-    }
     
+    searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+      public boolean onQueryTextChange(String arg0) {
+          return false;
+      }
+
+      public boolean onQueryTextSubmit(String arg0) {
+          if (searchItem != null) {
+              searchItem.collapseActionView();
+          }
+          return false;
+      }
+    });
+
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -202,9 +240,9 @@ public class SearchActivity extends Activity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     
     if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE) {
-      //ImageSeachParams params = (ImageSeachParams)data.getSerializableExtra("params");
       imageAdapter.clear();
-      doSearch(null, 0);
+      String query = currentQuery;
+      doSearch(query, 0);
     }
   } 
   
