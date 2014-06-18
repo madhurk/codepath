@@ -32,6 +32,7 @@ public class SearchActivity extends Activity {
 
   GridView gvSearchResults;
   String currentQuery;
+  View progress;
   
   List<ImageResult> imageResults = new ArrayList<ImageResult>();
   ImageResultArrayAdapter imageAdapter;
@@ -44,6 +45,7 @@ public class SearchActivity extends Activity {
     setContentView(R.layout.activity_search);
     setupViews();
     
+    progress.setVisibility(View.GONE);
     imageAdapter = new ImageResultArrayAdapter(this, imageResults);
     gvSearchResults.setAdapter(imageAdapter);
     
@@ -70,6 +72,7 @@ public class SearchActivity extends Activity {
     if(savedInstanceState != null){
       currentQuery = savedInstanceState.getString("query");
     }
+    
     
     // Get the intent, verify the action and get the query
     handleIntent(getIntent());
@@ -138,8 +141,10 @@ public class SearchActivity extends Activity {
     if(valid(site))
       sb.append("as_sitesearch=").append(site).append("&");      
 
-    apiUrl = sb.append("q=").append(queryEncoded).toString();
+    apiUrl = sb.append("q=").append(queryEncoded).toString();    
 
+    if(offset == 0)
+      progress.setVisibility(View.VISIBLE);
 
     AsyncHttpClient httpClient = new AsyncHttpClient();
     httpClient.get(apiUrl, new JsonHttpResponseHandler(){
@@ -147,18 +152,27 @@ public class SearchActivity extends Activity {
       @Override
       public void onFailure(Throwable e, JSONArray errorResponse){
         Toast.makeText(getApplicationContext(), "Error getting results, please check your Internet connection", Toast.LENGTH_SHORT).show();
+        progress.setVisibility(View.GONE);
       }
       
       @Override
       public void onFailure ( Throwable e, JSONObject errorResponse ) {
         Toast.makeText(getApplicationContext(), "Error getting results, please check your Internet connection", Toast.LENGTH_SHORT).show();
+        progress.setVisibility(View.GONE);
       }
       
       @Override
       public void onFailure ( Throwable e, String errorResponse ) {
         Toast.makeText(getApplicationContext(), "Error getting results, please check your Internet connection", Toast.LENGTH_SHORT).show();
+        progress.setVisibility(View.GONE);
       }
       
+      @Override
+      public void onProgress(int bytesWritten, int totalSize) {
+          int progressPercentage = (int)100*bytesWritten/totalSize;
+          //progress.setProgress(progressPercentage);
+      }
+           
       @Override
       public void onSuccess(JSONObject response){
         
@@ -174,9 +188,10 @@ public class SearchActivity extends Activity {
           //Toast.makeText(getApplicationContext(), "Error parsing results from google", Toast.LENGTH_SHORT).show();
           e.printStackTrace();
         }
+        progress.setVisibility(View.GONE);
       }
       
-    });
+    });    
   }
 
   private boolean valid(String val){
@@ -188,6 +203,7 @@ public class SearchActivity extends Activity {
   
   private void setupViews(){
     gvSearchResults = (GridView)findViewById(R.id.gvSearchResults);
+    progress = findViewById(R.id.pbLoadingImage);
   }
   
   @Override
