@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -120,11 +121,28 @@ public class SearchActivity extends Activity {
 
     AsyncHttpClient httpClient = new AsyncHttpClient();
     httpClient.get(apiUrl, new JsonHttpResponseHandler(){
+      
+      @Override
+      public void onFailure(Throwable e, JSONArray errorResponse){
+        Toast.makeText(getApplicationContext(), "Error getting results, please check your Internet connection", Toast.LENGTH_SHORT).show();
+      }
+      
+      @Override
+      public void onFailure ( Throwable e, JSONObject errorResponse ) {
+        Toast.makeText(getApplicationContext(), "Error getting results, please check your Internet connection", Toast.LENGTH_SHORT).show();
+      }
+      
+      @Override
+      public void onFailure ( Throwable e, String errorResponse ) {
+        Toast.makeText(getApplicationContext(), "Error getting results, please check your Internet connection", Toast.LENGTH_SHORT).show();
+      }
+      
       @Override
       public void onSuccess(JSONObject response){
         
-        if(response == null)
+        if(response == null){
           return;
+        }
         
         JSONArray jsonImageResults = null;
         try{
@@ -134,7 +152,8 @@ public class SearchActivity extends Activity {
           //Toast.makeText(getApplicationContext(), "Error parsing results from google", Toast.LENGTH_SHORT).show();
           e.printStackTrace();
         }
-      }      
+      }
+      
     });
   }
 
