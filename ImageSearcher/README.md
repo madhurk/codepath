@@ -10,9 +10,10 @@ User stories completed:
 -User can tap on any image in results to see the image full-screen  
 -User can scroll down “infinitely” to continue loading more image results (up to 8 pages)  
 
-Additional user stories completed:  
+Additional user stories / features completed:  
 -Search widget is embedded in the ActionBar  
 -When the user starts typing search query, autocomplete suggestions are shown using previous queries performed by the user  
+-Voice Search: User can input their query by voice using the mic icon on the search bar  
 -ActionBar shows "Up" navigation button in settings and full image screens  
 -Full image can be shared by any of the sharing apps present on the phone  
 -Polished look and feel for results displayed in the grid view  
