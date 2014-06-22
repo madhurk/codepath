@@ -19,6 +19,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
   
+  private static class ViewHolder {
+    ImageView ivProfileImageView;
+    TextView tvScreenName;
+    TextView tvFullName;
+    TextView tvBody;
+    TextView tvTimestamp;    
+  }
+
   public TweetArrayAdapter(Context context, List<Tweet> tweets){
     super(context, 0, tweets);
   }
@@ -27,36 +35,39 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
   public View getView(int position, View convertView, ViewGroup parent) {
     Tweet tweet = getItem(position);
     
-    View tweetView;
+    ViewHolder viewHolder;
     if(convertView == null){
+      
+      viewHolder = new ViewHolder();
       LayoutInflater inflator = LayoutInflater.from(getContext());
-      tweetView = inflator.inflate(R.layout.tweet_item, parent, false);
+      convertView = inflator.inflate(R.layout.tweet_item, parent, false);
+      
+      viewHolder.ivProfileImageView = (ImageView)convertView.findViewById(R.id.ivProfileImage);
+      viewHolder.tvScreenName = (TextView)convertView.findViewById(R.id.tvScreenName);
+      viewHolder.tvFullName = (TextView)convertView.findViewById(R.id.tvFullName);
+      viewHolder.tvBody = (TextView)convertView.findViewById(R.id.tvBody);
+      viewHolder.tvTimestamp = (TextView)convertView.findViewById(R.id.tvTimestamp);
+      convertView.setTag(viewHolder);
     }else{
-      tweetView = convertView;
+      viewHolder = (ViewHolder)convertView.getTag();
     }
     
-    ImageView ivProfileImageView = (ImageView)tweetView.findViewById(R.id.ivProfileImage);
-    TextView tvScreenName = (TextView)tweetView.findViewById(R.id.tvScreenName);
-    TextView tvFullName = (TextView)tweetView.findViewById(R.id.tvFullName);
-    TextView tvBody = (TextView)tweetView.findViewById(R.id.tvBody);
-    TextView tvTimestamp = (TextView)tweetView.findViewById(R.id.tvTimestamp);
-    
-    ivProfileImageView.setImageResource(android.R.color.transparent);
+    viewHolder.ivProfileImageView.setImageResource(android.R.color.transparent);
     ImageLoader loader = ImageLoader.getInstance();
-    loader.displayImage(tweet.getUser().getProfileImg(), ivProfileImageView);
+    loader.displayImage(tweet.getUser().getProfileImg(), viewHolder.ivProfileImageView);
     
-    tvScreenName.setText("@" + tweet.getUser().getScreenName());
-    tvBody.setText(tweet.getBody());
-    tvFullName.setText(tweet.getUser().getName());
+    viewHolder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
+    viewHolder.tvBody.setText(tweet.getBody());
+    viewHolder.tvFullName.setText(tweet.getUser().getName());
     
     String createdAt = tweet.getCreatedAt();
     String ts = getTs(createdAt);
     if(ts != null)
-      tvTimestamp.setText(ts);
+      viewHolder.tvTimestamp.setText(ts);
     else
-      tvTimestamp.setText("");
+      viewHolder.tvTimestamp.setText("");
     
-    return tweetView;
+    return convertView;
   }
 
   private String getTs(String createdAt) {
