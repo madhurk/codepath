@@ -75,11 +75,13 @@ public class TimelineActivity extends Activity {
   }
   
   public void onCompose(MenuItem mi){
-    Intent i = new Intent(this, ComposeActivity.class);
-    i.putExtra("name", self.getName());
-    i.putExtra("screen_name", self.getScreenName());
-    i.putExtra("profile_image", self.getProfileImg());
-    startActivityForResult(i, COMPOSE_REQUEST_CODE);
+    if(self != null){
+      Intent i = new Intent(this, ComposeActivity.class);
+      i.putExtra("name", self.getName());
+      i.putExtra("screen_name", self.getScreenName());
+      i.putExtra("profile_image", self.getProfileImg());
+      startActivityForResult(i, COMPOSE_REQUEST_CODE);
+    }
   }
   
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
@@ -103,7 +105,9 @@ public class TimelineActivity extends Activity {
       }
       
       @Override
-      public void onSuccess(JSONArray json){
+      public void onSuccess(int returnCode, JSONArray json){
+        if(returnCode != 200)
+          Toast.makeText(getApplicationContext(), "Error fetching tweets, code="+returnCode, Toast.LENGTH_SHORT).show();
         aTweets.addAll(Tweet.fromJSONArray(json));
         if(aTweets.getCount() > 0){
           Tweet lastTweet = aTweets.getItem(aTweets.getCount()-1);

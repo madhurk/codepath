@@ -45,11 +45,13 @@
         </activity>
         <activity
             android:name="madhur.codepath.tweetortweak.TimelineActivity"
-            android:label="@string/title_activity_timeline" >
+            android:label="@string/title_activity_timeline" 
+            android:launchMode="singleTop">
         </activity>
         <activity
             android:name="madhur.codepath.tweetortweak.ComposeActivity"
-            android:label="@string/title_activity_compose" >
+            android:label="@string/title_activity_compose"
+            android:parentActivityName="madhur.codepath.tweetortweak.TimelineActivity"  >
         </activity>
     </application>
 

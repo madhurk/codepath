@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivComposeProfileImg"
-        android:text="TextView" />
+        android:text="" />
 
     <TextView
         android:id="@+id/tvComposeScreenName"
@@ -26,7 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvComposeFullName"
         android:layout_below="@+id/tvComposeFullName"
-        android:text="TextView" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="" />
 
     <EditText
         android:id="@+id/etComposeTweet"
@@ -40,5 +41,15 @@
 
         <requestFocus />
     </EditText>
+
+    <TextView
+        android:id="@+id/tvRemaningCharCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/etComposeTweet"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:text="140"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

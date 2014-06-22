@@ -5,6 +5,5 @@
           android:menuCategory="system"
           android:orderInCategory="1"
           android:icon="@drawable/ic_send"
-          android:onClick="onSend"          
           android:showAsAction="always" />
 </menu>
