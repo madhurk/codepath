@@ -47,6 +47,10 @@
             android:name="madhur.codepath.tweetortweak.TimelineActivity"
             android:label="@string/title_activity_timeline" >
         </activity>
+        <activity
+            android:name="madhur.codepath.tweetortweak.ComposeActivity"
+            android:label="@string/title_activity_compose" >
+        </activity>
     </application>
 
 </manifest>

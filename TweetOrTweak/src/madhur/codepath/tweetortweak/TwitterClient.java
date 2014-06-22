@@ -1,5 +1,7 @@
 package madhur.codepath.tweetortweak;
 
+import madhur.codepath.tweetortweak.models.Tweet;
+
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
@@ -33,22 +35,27 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
     
+    public void sendTweet(Tweet tweet, AsyncHttpResponseHandler handler){
+      String apiUrl = getApiUrl("statuses/update.json");
+      
+      RequestParams params = new RequestParams();
+      params.put("status", tweet.getBody());
+
+      client.post(apiUrl, params, handler);
+    }
+    
+    public void getSelfInfo(AsyncHttpResponseHandler handler){
+      String apiUrl = getApiUrl("account/verify_credentials.json");
+      client.get(apiUrl, null, handler);
+    }    
+    
     public void getHomeTimeline(long maxId, Context context, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("count", "50");
         if(maxId > 0)
           params.put("max_id", String.valueOf(maxId));
-        Toast.makeText(context, "Requesting maxid=" + maxId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Requesting maxid=" + maxId, Toast.LENGTH_SHORT).show();
         client.get(apiUrl, params, handler);
-    }
-    
-    /* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-     * 	  i.e getApiUrl("statuses/home_timeline.json");
-     * 2. Define the parameters to pass to the request (query or body)
-     *    i.e RequestParams params = new RequestParams("foo", "bar");
-     * 3. Define the request method and make a call to the client
-     *    i.e client.get(apiUrl, params, handler);
-     *    i.e client.post(apiUrl, params, handler);
-     */
+    }    
 }

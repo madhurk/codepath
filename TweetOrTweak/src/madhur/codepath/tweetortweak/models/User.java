@@ -1,5 +1,6 @@
 package madhur.codepath.tweetortweak.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,5 +43,5 @@ public class User {
 
   public String getScreenName() {
     return screenName;
-  }  
+  }
 }

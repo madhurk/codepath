@@ -49,6 +49,10 @@ public class Tweet {
     return tweets;
   }
 
+  public void setBody(String text){
+    this.body = text;
+  }
+  
   public String getBody() {
     return body;
   }
