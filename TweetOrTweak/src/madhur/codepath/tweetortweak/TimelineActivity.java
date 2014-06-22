@@ -23,6 +23,7 @@ public class TimelineActivity extends Activity {
   //private ArrayAdapter<Tweet> aTweets;
   private TweetArrayAdapter aTweets;
   private ListView lvTweets; 
+  long lastLoadedId = 0;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +32,27 @@ public class TimelineActivity extends Activity {
     client = TwitterApplication.getRestClient();
     
     lvTweets = (ListView)findViewById(R.id.lvTweets);
+    lvTweets.setOnScrollListener(new EndlessScrollListener() {
+      @Override
+      public void onLoadMore(int page, int totalItemsCount) {
+        populateTimeline(false);
+      }
+    });
+    
     tweets = new ArrayList<Tweet>();
     //aTweets = new ArrayAdapter<Tweet>(this, android.R.layout.simple_list_item_1, tweets);
     aTweets = new TweetArrayAdapter(this, tweets);
     lvTweets.setAdapter(aTweets);
     
-    populateTimeline();
+    populateTimeline(true);
   }
   
-  private void populateTimeline(){
-    client.getHomeTimeline(new JsonHttpResponseHandler(){
+  private void populateTimeline(boolean latest){
+    long maxId = -1;
+    if(!latest && lastLoadedId > 0)
+      maxId = lastLoadedId;
+    
+    client.getHomeTimeline(maxId, new JsonHttpResponseHandler(){
       @Override
       public void onFailure(Throwable e, String s) {
         Log.d("debug", e.toString());
@@ -50,6 +62,11 @@ public class TimelineActivity extends Activity {
       @Override
       public void onSuccess(JSONArray json){
         aTweets.addAll(Tweet.fromJSONArray(json));
+        if(aTweets.getCount() > 0){
+          Tweet lastTweet = aTweets.getItem(aTweets.getCount()-1);
+          lastLoadedId = lastTweet.getId();
+          //Toast.makeText(getApplicationContext(), "Last Id="+lastLoadedId, Toast.LENGTH_SHORT).show();
+        }
       }
     });
   }
