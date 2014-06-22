@@ -31,6 +31,10 @@ public class TwitterClient extends OAuthBaseClient {
     public static final String REST_CONSUMER_SECRET = "a0s8d4kEmnecehYd6whwY6XlOvEijFIRsCFQs2gpnwed26igvE"; 
     public static final String REST_CALLBACK_URL = "oauth://tweetortweak";
     
+    public static final int FETCH_HOME_TWEETS = 0;
+    public static final int FETCH_OLD_TWEETS = 1;
+    public static final int FETCH_NEW_TWEETS = 2;
+    
     public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
@@ -49,13 +53,15 @@ public class TwitterClient extends OAuthBaseClient {
       client.get(apiUrl, null, handler);
     }    
     
-    public void getHomeTimeline(long maxId, Context context, AsyncHttpResponseHandler handler) {
+    public void getHomeTimeline(long maxId, long sinceId, Context context, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("count", "50");
         if(maxId > 0)
           params.put("max_id", String.valueOf(maxId));
-        //Toast.makeText(context, "Requesting maxid=" + maxId, Toast.LENGTH_SHORT).show();
+        if(sinceId > 0)
+          params.put("since_id", String.valueOf(sinceId));
+        //Toast.makeText(context, "Sending twitter request..." , Toast.LENGTH_SHORT).show();
         client.get(apiUrl, params, handler);
     }    
 }

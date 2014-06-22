@@ -6,7 +6,6 @@ import java.util.List;
 import madhur.codepath.tweetortweak.models.Tweet;
 import madhur.codepath.tweetortweak.models.User;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -15,42 +14,54 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import eu.erikw.PullToRefreshListView;
+import eu.erikw.PullToRefreshListView.OnRefreshListener;
+
 public class TimelineActivity extends Activity {
 
   private TwitterClient client;
+  private TweetsFetcher tweetFetcher;
   private List<Tweet> tweets;
   private TweetArrayAdapter aTweets;
-  private ListView lvTweets; 
-  long lastLoadedId = 0;
-  public static final int COMPOSE_REQUEST_CODE = 1;
-  
-  User self;
+  private PullToRefreshListView lvTweets; 
+  private User self;
+
+  private static final int COMPOSE_REQUEST_CODE = 1;  
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_timeline);
+        
+    tweets = new ArrayList<Tweet>();
+    aTweets = new TweetArrayAdapter(this, tweets);
+    
     client = TwitterApplication.getRestClient();
     
-    lvTweets = (ListView)findViewById(R.id.lvTweets);
+    lvTweets = (PullToRefreshListView)findViewById(R.id.lvTweets);
+    lvTweets.setAdapter(aTweets);
+
+    tweetFetcher = new TweetsFetcher(this, client, aTweets, lvTweets);    
+    tweetFetcher.fetch(TwitterClient.FETCH_HOME_TWEETS);
+    populateSelfInfo();
+
     lvTweets.setOnScrollListener(new EndlessScrollListener() {
       @Override
       public void onLoadMore(int page, int totalItemsCount) {
-        populateTimeline(false);
+        tweetFetcher.fetch(TwitterClient.FETCH_OLD_TWEETS);
       }
     });
     
-    tweets = new ArrayList<Tweet>();
-    aTweets = new TweetArrayAdapter(this, tweets);
-    lvTweets.setAdapter(aTweets);
-    
-    populateTimeline(true);
-    populateSelfInfo();
+    lvTweets.setOnRefreshListener(new OnRefreshListener() {
+      @Override
+      public void onRefresh() {
+        tweetFetcher.fetch(TwitterClient.FETCH_NEW_TWEETS);
+      }
+    });
   }
   
   private void populateSelfInfo(){
@@ -86,35 +97,7 @@ public class TimelineActivity extends Activity {
   
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
     if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE) {
-      populateTimeline(true);
+      tweetFetcher.fetch(TwitterClient.FETCH_NEW_TWEETS);
     }
-  } 
-  
-  private void populateTimeline(boolean latest){
-    long maxId = -1;
-    if(!latest && lastLoadedId > 0)
-      maxId = lastLoadedId;
-    
-    client.getHomeTimeline(maxId, getApplicationContext(), new JsonHttpResponseHandler(){
-      
-      @Override
-      public void onFailure(Throwable e, String s) {
-        Toast.makeText(getApplicationContext(), "Error getting Json response", Toast.LENGTH_SHORT).show();
-        Log.d("debug", e.toString());
-        Log.d("debug", s);
-      }
-      
-      @Override
-      public void onSuccess(int returnCode, JSONArray json){
-        if(returnCode != 200)
-          Toast.makeText(getApplicationContext(), "Error fetching tweets, code="+returnCode, Toast.LENGTH_SHORT).show();
-        aTweets.addAll(Tweet.fromJSONArray(json));
-        if(aTweets.getCount() > 0){
-          Tweet lastTweet = aTweets.getItem(aTweets.getCount()-1);
-          lastLoadedId = lastTweet.getId();
-          //Toast.makeText(getApplicationContext(), "Last Id="+lastLoadedId, Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
-  }
+  }   
 }
