@@ -12,19 +12,33 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
+        android:id="@+id/tvFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:text="" />
+
+    <TextView
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/ivProfileImage"
-        android:text="\@foo" />
-
+        android:layout_toRightOf="@+id/tvFullName"
+        android:text="" />
+        
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/tvScreenName"
+        android:text="" />
+        
     <TextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvScreenName"
-        android:layout_below="@+id/tvScreenName"
-        android:text="This is the tweet body" />
+        android:layout_alignLeft="@+id/tvFullName"
+        android:layout_below="@+id/tvFullName"        
+        android:text="" />
 
 </RelativeLayout>

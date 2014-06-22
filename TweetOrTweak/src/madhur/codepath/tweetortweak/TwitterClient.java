@@ -4,6 +4,7 @@ import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -32,12 +33,13 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
     
-    public void getHomeTimeline(long sinceId, AsyncHttpResponseHandler handler) {
+    public void getHomeTimeline(long maxId, Context context, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("count", "50");
-        if(sinceId != -1)
-          params.put("max_id", String.valueOf(sinceId));
+        if(maxId > 0)
+          params.put("max_id", String.valueOf(maxId));
+        Toast.makeText(context, "Requesting maxid=" + maxId, Toast.LENGTH_SHORT).show();
         client.get(apiUrl, params, handler);
     }
     

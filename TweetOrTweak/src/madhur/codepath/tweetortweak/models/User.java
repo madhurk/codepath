@@ -9,7 +9,6 @@ public class User {
   private String profileImg;
   private String screenName;
   
-  
   public static User fromJSON(JSONObject json) {
     User user = new User();
     

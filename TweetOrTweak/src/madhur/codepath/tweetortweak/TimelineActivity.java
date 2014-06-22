@@ -52,9 +52,11 @@ public class TimelineActivity extends Activity {
     if(!latest && lastLoadedId > 0)
       maxId = lastLoadedId;
     
-    client.getHomeTimeline(maxId, new JsonHttpResponseHandler(){
+    client.getHomeTimeline(maxId, getApplicationContext(), new JsonHttpResponseHandler(){
+      
       @Override
       public void onFailure(Throwable e, String s) {
+        Toast.makeText(getApplicationContext(), "Error getting Json response", Toast.LENGTH_SHORT).show();
         Log.d("debug", e.toString());
         Log.d("debug", s);
       }
