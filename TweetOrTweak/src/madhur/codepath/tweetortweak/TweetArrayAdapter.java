@@ -87,7 +87,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
   private String getFriendlyTs(long millis){
     long secs = millis / 1000;
     if(secs < 60){
-      return secs+"s";
+      return "Now";
     }
     long mins = secs / 60;
     if(mins < 60){
