@@ -1,9 +1,9 @@
 package hackathon.wearableflashcards;
 
 public class FlashCard {
-  private String word;
-  private String[] options;
-  private String answer;
+  public String word;
+  public String[] options;
+  public String answer;
   
   public FlashCard(String word, String[] options, String answer){
     this.word = word;
@@ -16,5 +16,13 @@ public class FlashCard {
       return false;
     
     return options[userChoice].equalsIgnoreCase(answer);
+  }
+  
+  public String getOptions(){
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < options.length; ++i){
+      sb.append(i).append(".").append(options[i]).append("; ");
+    }
+    return sb.toString();
   }
 }
