@@ -54,9 +54,8 @@ public class TimelineActivity extends Activity {
       tweetFetcher.fetch(TwitterClient.FETCH_HOME_TWEETS);
       populateSelfInfo();
     }else{
-      List<Tweet> savedTweets = Tweet.getSavedTweets();
-      if(savedTweets != null && savedTweets.size() > 0){
-        aTweets.addAll(savedTweets);
+      tweetFetcher.loadSavedTweets();
+      if(aTweets.getCount() > 0){
         Toast.makeText(this, "Internet not available, showing old tweets", Toast.LENGTH_SHORT).show();
       }else{
         toastNoNetwork();

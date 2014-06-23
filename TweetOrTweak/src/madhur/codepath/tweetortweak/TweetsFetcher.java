@@ -33,6 +33,18 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     this.lvTweets = lvTweets;
   }
   
+  public synchronized void loadSavedTweets(){
+    List<Tweet> savedTweets = Tweet.getSavedTweets();
+    if(savedTweets != null && savedTweets.size() > 0){
+      aTweets.addAll(savedTweets);
+      Tweet lastTweet = savedTweets.get(savedTweets.size()-1);
+      oldestTweetId = lastTweet.getTweetId();
+      
+      Tweet firstTweet = savedTweets.get(0);
+      newestTweetId = firstTweet.getTweetId();  
+    }
+  }
+  
   public synchronized void fetch(int mode){
     
     String params = oldestTweetId + "&&" + newestTweetId;
