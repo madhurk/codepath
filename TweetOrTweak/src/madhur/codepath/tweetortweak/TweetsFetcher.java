@@ -52,9 +52,13 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   
   @Override
   public void onFailure(Throwable e, String s) {
-    Toast.makeText(context, "Error getting Json response", Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, "Error fetching tweets", Toast.LENGTH_SHORT).show();
     Log.d("debug", e.toString());
     Log.d("debug", s);
+    
+    if(mode == TwitterClient.FETCH_NEW_TWEETS){
+      lvTweets.onRefreshComplete();
+    }
   }
   
   @Override
@@ -72,10 +76,10 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
       
       if(mode == TwitterClient.FETCH_HOME_TWEETS){
         Tweet lastTweet = fetchedTweets.get(fetchedTweets.size()-1);
-        oldestTweetId = lastTweet.getId();
+        oldestTweetId = lastTweet.getTweetId();
         
         Tweet firstTweet = fetchedTweets.get(0);
-        newestTweetId = firstTweet.getId();  
+        newestTweetId = firstTweet.getTweetId();  
         
         aTweets.clear();
         aTweets.addAll(fetchedTweets);
@@ -83,14 +87,14 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
       
       if(mode == TwitterClient.FETCH_OLD_TWEETS){
         Tweet lastTweet = fetchedTweets.get(fetchedTweets.size()-1);
-        oldestTweetId = lastTweet.getId();
+        oldestTweetId = lastTweet.getTweetId();
         
         aTweets.addAll(fetchedTweets);
       }
       
       if(mode == TwitterClient.FETCH_NEW_TWEETS){
         Tweet firstTweet = fetchedTweets.get(0);
-        newestTweetId = firstTweet.getId();        
+        newestTweetId = firstTweet.getTweetId();        
         
         List<Tweet> allTweets = new ArrayList<Tweet>(fetchedTweets.size() + aTweets.getCount());
         allTweets.addAll(fetchedTweets);

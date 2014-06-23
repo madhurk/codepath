@@ -7,11 +7,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Tweet {
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
+@Table(name = "items")
+public class Tweet extends Model{
+  
+  @Column(name = "body")
   private String body;
-  private long id;
+  
+  @Column(name = "tweet_id", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE)
+  private long tweetId;
+  
+  @Column(name = "created_at")
   private String createdAt;
+  
+  @Column(name = "user")
   private User user;  
+  
+  public Tweet(){
+     super();
+  }
   
   public static Tweet fromJSON(JSONObject json){
     
@@ -19,7 +37,7 @@ public class Tweet {
     
     try{
       tweet.body = json.getString("text");
-      tweet.id = json.getLong("id");
+      tweet.tweetId = json.getLong("id");
       tweet.createdAt = json.getString("created_at");
       tweet.user = User.fromJSON(json.getJSONObject("user"));
     }catch(JSONException e){
@@ -57,8 +75,8 @@ public class Tweet {
     return body;
   }
 
-  public long getId() {
-    return id;
+  public long getTweetId() {
+    return tweetId;
   }
 
   public String getCreatedAt() {
@@ -71,5 +89,12 @@ public class Tweet {
 
   public String toString(){
     return user.getScreenName() + ": " + body;        
+  }
+  
+  public static List<Tweet> getSavedTweets() {
+    return new Select()
+      .from(Tweet.class)
+      .orderBy("created_at DESC")
+      .execute();
   }
 }

@@ -9,7 +9,10 @@ import madhur.codepath.tweetortweak.models.User;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -45,21 +48,41 @@ public class TimelineActivity extends Activity {
     lvTweets = (PullToRefreshListView)findViewById(R.id.lvTweets);
     lvTweets.setAdapter(aTweets);
 
-    tweetFetcher = new TweetsFetcher(this, client, aTweets, lvTweets);    
-    tweetFetcher.fetch(TwitterClient.FETCH_HOME_TWEETS);
-    populateSelfInfo();
+    tweetFetcher = new TweetsFetcher(this, client, aTweets, lvTweets);
+    
+    if(isNetworkAvailable()){
+      tweetFetcher.fetch(TwitterClient.FETCH_HOME_TWEETS);
+      populateSelfInfo();
+    }else{
+      List<Tweet> savedTweets = Tweet.getSavedTweets();
+      if(savedTweets != null && savedTweets.size() > 0){
+        aTweets.addAll(savedTweets);
+        Toast.makeText(this, "Internet not available, showing old tweets", Toast.LENGTH_SHORT).show();
+      }else{
+        toastNoNetwork();
+      }
+    }
 
     lvTweets.setOnScrollListener(new EndlessScrollListener() {
       @Override
       public void onLoadMore(int page, int totalItemsCount) {
-        tweetFetcher.fetch(TwitterClient.FETCH_OLD_TWEETS);
+        if(isNetworkAvailable()){
+          tweetFetcher.fetch(TwitterClient.FETCH_OLD_TWEETS);
+        }else{
+          toastNoNetwork();
+        }
       }
     });
     
     lvTweets.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresh() {
-        tweetFetcher.fetch(TwitterClient.FETCH_NEW_TWEETS);
+        if(isNetworkAvailable()){
+          tweetFetcher.fetch(TwitterClient.FETCH_NEW_TWEETS);
+        }else{
+          lvTweets.onRefreshComplete();
+          toastNoNetwork();
+        }
       }
     });
   }
@@ -99,5 +122,28 @@ public class TimelineActivity extends Activity {
     if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE) {
       tweetFetcher.fetch(TwitterClient.FETCH_NEW_TWEETS);
     }
-  }   
+  }  
+  
+  @Override
+  public void onStop(){
+    if(aTweets != null){
+      for(int i = 0; i < aTweets.getCount(); ++i){
+        Tweet tweet = aTweets.getItem(i);
+        tweet.getUser().save();
+        tweet.save();
+      }
+    }
+    super.onStop();
+  }
+  
+  private boolean isNetworkAvailable() {
+    ConnectivityManager connectivityManager 
+          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+  }
+  
+  private void toastNoNetwork(){
+    Toast.makeText(this, "Sorry, Internet connection is not available", Toast.LENGTH_SHORT).show();
+  }
 }

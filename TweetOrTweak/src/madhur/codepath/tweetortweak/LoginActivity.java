@@ -27,7 +27,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 	// i.e Display application "homepage"
     @Override
     public void onLoginSuccess() {
-      Toast.makeText(this, "Login Success!", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(this, "Login Success!", Toast.LENGTH_SHORT).show();
       Intent i = new Intent(this, TimelineActivity.class);
       startActivity(i);
     }
