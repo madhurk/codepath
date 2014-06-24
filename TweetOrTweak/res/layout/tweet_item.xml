@@ -9,6 +9,8 @@
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -16,6 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_marginTop="10dp"        
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
         android:text="" />
 
     <TextView
@@ -23,6 +28,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/tvFullName"
+        android:layout_alignBottom="@+id/tvFullName"
+        android:layout_marginLeft="2dp"
+        android:textSize="12sp"
+        android:textColor="@color/light_gray"
         android:text="" />
         
     <TextView
@@ -30,7 +39,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignBottom="@+id/tvScreenName"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"        
+        android:textSize="12sp"
+        android:textColor="@color/light_gray"        
         android:text="" />
         
     <TextView
@@ -40,7 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvFullName"
-        android:layout_below="@+id/tvFullName"        
+        android:layout_below="@+id/tvFullName"      
+        android:layout_marginBottom="10dp"
+        android:textSize="17sp"
         android:text="" />
 
 </RelativeLayout>

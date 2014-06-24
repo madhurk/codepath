@@ -10,14 +10,18 @@
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/tvComposeFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:textStyle="bold"
         android:layout_toRightOf="@+id/ivComposeProfileImg"
+        android:layout_alignTop="@+id/ivComposeProfileImg"
+        android:layout_marginLeft="10dp"
         android:text="" />
 
     <TextView
@@ -26,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvComposeFullName"
         android:layout_below="@+id/tvComposeFullName"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="12sp"
+        android:textColor="@color/light_gray"                
         android:text="" />
 
     <EditText
@@ -35,7 +40,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/ivComposeProfileImg"
-        android:layout_marginTop="15dp"
+        android:layout_alignLeft="@+id/ivComposeProfileImg"      
+        android:layout_marginLeft="10dp"  
+        android:layout_marginTop="20dp"
         android:hint="What's happening?"
         android:ems="10" >
 
