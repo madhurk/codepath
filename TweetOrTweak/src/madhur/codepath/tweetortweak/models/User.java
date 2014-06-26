@@ -15,7 +15,7 @@ public class User extends Model{
   @Column(name = "name")
   private String name;
   
-  @Column(name = "user_id")
+  @Column(name = "user_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
   private long userId;
   
   @Column(name = "profile_img")

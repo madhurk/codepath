@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
@@ -24,7 +25,7 @@ public class Tweet extends Model{
   @Column(name = "created_at")
   private String createdAt;
   
-  @Column(name = "user")
+  @Column(name = "user", onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
   private User user;  
   
   public Tweet(){
