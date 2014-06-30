@@ -30,11 +30,7 @@ public class TwitterClient extends OAuthBaseClient {
     public static final String REST_CONSUMER_KEY = "bM8mbuS3N64sESjXnLdBeoIWo";       
     public static final String REST_CONSUMER_SECRET = "a0s8d4kEmnecehYd6whwY6XlOvEijFIRsCFQs2gpnwed26igvE"; 
     public static final String REST_CALLBACK_URL = "oauth://tweetortweak";
-    
-    public static final int FETCH_HOME_TWEETS = 0;
-    public static final int FETCH_OLD_TWEETS = 1;
-    public static final int FETCH_NEW_TWEETS = 2;
-    
+        
     public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }

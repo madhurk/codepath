@@ -1,6 +1,5 @@
 package madhur.codepath.tweetortweak;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import madhur.codepath.tweetortweak.models.Tweet;
@@ -13,52 +12,66 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import eu.erikw.PullToRefreshListView;
-
 public class TweetsFetcher extends JsonHttpResponseHandler {
   
+  public static final int FETCH_HOME_TWEETS = 0;
+  public static final int FETCH_OLD_TWEETS = 1;
+  public static final int FETCH_NEW_TWEETS = 2;
+
+  public static final int TWEET_TYPE_HOME = 0;
+  public static final int TWEET_TYPE_MENTIONS = 1;
+  
   private Context context;
-  private TweetArrayAdapter aTweets;
   private long oldestTweetId=-1;
   private long newestTweetId=-1;
-  private TwitterClient client;
-  private PullToRefreshListView lvTweets;
   private int mode;
+  private int tweetType = -1;
+  TwitterClient client;  
+  TweetViewListener tweetViewListener;
   
-  public TweetsFetcher(Context context, TwitterClient client, 
-      TweetArrayAdapter aTweets, PullToRefreshListView lvTweets){
+  public TweetsFetcher(Context context, TwitterClient client,  int tweetType,
+      TweetViewListener tweetViewListener){
     this.context = context;
-    this.aTweets = aTweets;
+    this.tweetType = tweetType;
+    this.tweetViewListener = tweetViewListener;
     this.client = client;
-    this.lvTweets = lvTweets;
   }
   
-  public synchronized void loadSavedTweets(){
+  public synchronized List<Tweet> loadSavedTweets(){
     List<Tweet> savedTweets = Tweet.getSavedTweets();
     if(savedTweets != null && savedTweets.size() > 0){
-      aTweets.addAll(savedTweets);
+      
       Tweet lastTweet = savedTweets.get(savedTweets.size()-1);
       oldestTweetId = lastTweet.getTweetId();
       
       Tweet firstTweet = savedTweets.get(0);
-      newestTweetId = firstTweet.getTweetId();  
+      newestTweetId = firstTweet.getTweetId();
+      
+      return savedTweets;
     }
+    
+    return null;
   }
+    
   
   public synchronized void fetch(int mode){
     
-    String params = oldestTweetId + "&&" + newestTweetId;
+    //String params = oldestTweetId + "&&" + newestTweetId;
     //Toast.makeText(context, "Got fetch request with mode ="+mode+"&"+params, Toast.LENGTH_SHORT).show();
 
     this.mode = mode;
     
-    if(mode == TwitterClient.FETCH_HOME_TWEETS){
-      client.getHomeTimeline(-1, -1, context, this);
-    }else if(mode == TwitterClient.FETCH_NEW_TWEETS){
-      client.getHomeTimeline(-1, newestTweetId, context, this);
-    }else if(mode == TwitterClient.FETCH_OLD_TWEETS){
-      if(oldestTweetId > 0)
-        client.getHomeTimeline(oldestTweetId, -1, context, this);
+    if(mode == FETCH_HOME_TWEETS){
+      if(tweetType == TWEET_TYPE_HOME)
+        client.getHomeTimeline(-1, -1, context, this);
+    }else if(mode == FETCH_NEW_TWEETS){
+      if(tweetType == TWEET_TYPE_HOME)
+        client.getHomeTimeline(-1, newestTweetId, context, this);
+    }else if(mode == FETCH_OLD_TWEETS){
+      if(oldestTweetId > 0){
+        if(tweetType == TWEET_TYPE_HOME)
+          client.getHomeTimeline(oldestTweetId, -1, context, this);
+      }
     }
   }
   
@@ -68,8 +81,8 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     Log.d("debug", e.toString());
     Log.d("debug", s);
     
-    if(mode == TwitterClient.FETCH_NEW_TWEETS){
-      lvTweets.onRefreshComplete();
+    if(mode == FETCH_NEW_TWEETS){
+      tweetViewListener.handleRefreshComplete();
     }
   }
   
@@ -86,41 +99,33 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     
     if(fetchedTweets.size() > 0){
       
-      if(mode == TwitterClient.FETCH_HOME_TWEETS){
+      if(mode == FETCH_HOME_TWEETS){
         Tweet lastTweet = fetchedTweets.get(fetchedTweets.size()-1);
         oldestTweetId = lastTweet.getTweetId();
         
         Tweet firstTweet = fetchedTweets.get(0);
         newestTweetId = firstTweet.getTweetId();  
         
-        aTweets.clear();
-        aTweets.addAll(fetchedTweets);
+        tweetViewListener.replaceTweets(fetchedTweets);
       }
       
-      if(mode == TwitterClient.FETCH_OLD_TWEETS){
+      if(mode == FETCH_OLD_TWEETS){
         Tweet lastTweet = fetchedTweets.get(fetchedTweets.size()-1);
         oldestTweetId = lastTweet.getTweetId();
         
-        aTweets.addAll(fetchedTweets);
+        tweetViewListener.appendTweets(fetchedTweets);
       }
       
-      if(mode == TwitterClient.FETCH_NEW_TWEETS){
+      if(mode == FETCH_NEW_TWEETS){
         Tweet firstTweet = fetchedTweets.get(0);
         newestTweetId = firstTweet.getTweetId();        
         
-        List<Tweet> allTweets = new ArrayList<Tweet>(fetchedTweets.size() + aTweets.getCount());
-        allTweets.addAll(fetchedTweets);
-        for(int i = 0; i < aTweets.getCount(); ++i){
-          allTweets.add(aTweets.getItem(i));
-        }
-        
-        aTweets.clear();
-        aTweets.addAll(allTweets);        
+        tweetViewListener.prependTweets(fetchedTweets);
       }
     }
         
-    if(mode == TwitterClient.FETCH_NEW_TWEETS){
-      lvTweets.onRefreshComplete();
+    if(mode == FETCH_NEW_TWEETS){
+      tweetViewListener.handleRefreshComplete();
     }
   }
 }

@@ -1,8 +1,9 @@
 package madhur.codepath.tweetortweak;
 
+import madhur.codepath.tweetortweak.models.Tweet;
+
 import org.json.JSONObject;
 
-import madhur.codepath.tweetortweak.models.Tweet;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -45,6 +45,7 @@ public class ComposeActivity extends Activity {
     ImageLoader loader = ImageLoader.getInstance();
     loader.displayImage(image, ivProfileImg);
 
+    
     final TextView tvRemainingCharcount = (TextView)findViewById(R.id.tvRemaningCharCount);
     
     etCompose = (EditText)findViewById(R.id.etComposeTweet);
