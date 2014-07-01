@@ -20,7 +20,9 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
 
   public static final int TWEET_TYPE_HOME = 0;
   public static final int TWEET_TYPE_MENTIONS = 1;
-  
+  public static final int TWEET_TYPE_USER = 2;
+
+ 
   private long oldestTweetId=-1;
   private long newestTweetId=-1;
   private int mode;

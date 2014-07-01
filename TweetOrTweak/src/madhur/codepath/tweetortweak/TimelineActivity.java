@@ -75,6 +75,16 @@ public class TimelineActivity extends ActionBarActivity {
         onCompose(item);
         return true;
       }
+    });
+    
+    item = menu.findItem(R.id.action_profile);
+
+    item.setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener (){ 
+      @Override
+      public boolean onMenuItemClick(MenuItem item){
+        onProfileView(item);
+        return true;
+      }
     }); 
     
     return super.onCreateOptionsMenu(menu);
@@ -86,6 +96,11 @@ public class TimelineActivity extends ActionBarActivity {
     i.putExtra("screen_name", self.getScreenName());
     i.putExtra("profile_image", self.getProfileImg());
     startActivityForResult(i, COMPOSE_REQUEST_CODE);
+  }
+  
+  public void onProfileView(MenuItem mi){
+    Intent i = new Intent(this, ProfileActivity.class);
+    startActivity(i);
   }
   
   private void setupTabs() {

@@ -24,6 +24,12 @@ public class User extends Model{
   @Column(name = "screen_name")
   private String screenName;
   
+  private String description;
+
+  private int followersCount;
+  
+  private int followingCount;
+  
   public User(){
     super();
  }
@@ -36,6 +42,9 @@ public class User extends Model{
       user.userId = json.getLong("id");
       user.screenName = json.getString("screen_name");
       user.profileImg = json.getString("profile_image_url");
+      user.description = json.getString("description");
+      user.followersCount = json.getInt("followers_count");
+      user.followingCount = json.getInt("friends_count");
     }catch(JSONException e){
       e.printStackTrace();
       return null;
@@ -66,5 +75,17 @@ public class User extends Model{
   // Used to return items from another table based on the foreign key
   public List<Tweet> items() {
       return getMany(Tweet.class, "User");
+  }
+
+  public CharSequence getDescription() {
+    return description;
+  }
+
+  public CharSequence getFollowersCount() {
+    return String.valueOf(followersCount);
+  }
+
+  public CharSequence getFollowingCount() {
+    return String.valueOf(followingCount);
   }
 }

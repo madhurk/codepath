@@ -55,6 +55,8 @@ public class TwitterClient extends OAuthBaseClient {
         apiUrl = getApiUrl("statuses/home_timeline.json");
       else if(tweetType == TweetsFetcher.TWEET_TYPE_MENTIONS)
         apiUrl = getApiUrl("statuses/mentions_timeline.json");
+      else if(tweetType == TweetsFetcher.TWEET_TYPE_USER)
+        apiUrl = getApiUrl("statuses/user_timeline.json");
       else
         return;
       

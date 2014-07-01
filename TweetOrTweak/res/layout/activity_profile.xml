@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+
+    <RelativeLayout 
+        android:id="@+id/rlHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true">
+        
+        <ImageView 
+            android:id="@+id/ivProfileImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+        	android:layout_alignParentTop="true"
+        	android:layout_marginLeft="10dp"
+        	android:layout_marginTop="10dp"
+			android:src="@android:drawable/screen_background_light_transparent"/>
+        
+            <TextView
+        android:id="@+id/tvProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:text="" />
+
+                        <TextView
+        android:id="@+id/tvTagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvProfileName"
+        android:layout_below="@+id/tvProfileName"
+                android:textSize="14sp"        
+        android:text="" />
+                        
+    </RelativeLayout>
+    
+    <LinearLayout 
+        android:id="@+id/llCounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlHeader"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginBottom="10dp">
+                        
+                    <TextView
+        android:id="@+id/tvFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="" />
+                    
+                    <TextView
+        android:id="@+id/tvFollowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginLeft="20dp"
+        android:text="" />
+                    
+    </LinearLayout>
+    
+    <fragment
+        android:layout_below="@+id/llCounts"
+        android:id="@+id/fragmentUserTimeline"
+        android:name="madhur.codepath.tweetortweak.fragments.UserTimelineFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_tweetslist" />
+
+</RelativeLayout>
