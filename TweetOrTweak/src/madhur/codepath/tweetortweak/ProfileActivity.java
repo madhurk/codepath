@@ -1,11 +1,13 @@
 package madhur.codepath.tweetortweak;
 
+import madhur.codepath.tweetortweak.fragments.UserTimelineFragment;
 import madhur.codepath.tweetortweak.models.User;
 
 import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -27,7 +29,7 @@ public class ProfileActivity extends ActionBarActivity {
     
     long userId = 0;
     if(i.getExtras() != null){
-      i.getExtras().getLong("user_id");
+      userId = i.getExtras().getLong("user_id");
     }
     
     loadProfileInfo(userId);
@@ -41,6 +43,11 @@ public class ProfileActivity extends ActionBarActivity {
         u = User.fromJSON(json);
         getActionBar().setTitle("@" + u.getScreenName());
         populateProfileHeader();
+        
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        UserTimelineFragment tweetsFragment = UserTimelineFragment.newInstance(u.getUserId());
+        ft.replace(R.id.flUserTweetsContainer, tweetsFragment);
+        ft.commit();
       }
     });
   }

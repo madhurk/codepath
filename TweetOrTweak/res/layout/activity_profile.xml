@@ -68,14 +68,15 @@
         android:text="" />
                     
     </LinearLayout>
-
-    <fragment
-        android:layout_below="@+id/llCounts"
-        android:id="@+id/fragmentUserTimeline"
-        android:name="madhur.codepath.tweetortweak.fragments.UserTimelineFragment"
+        <FrameLayout
+        android:id="@+id/flUserTweetsContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_tweetslist" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"        
+        android:layout_below="@+id/llCounts">
+    </FrameLayout>
+    
     
 
 </RelativeLayout>

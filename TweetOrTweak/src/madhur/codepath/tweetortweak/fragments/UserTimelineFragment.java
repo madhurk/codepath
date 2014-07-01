@@ -9,9 +9,17 @@ public class UserTimelineFragment extends TweetsListFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    tweetsFetcher = new TweetsFetcher(client, TweetsFetcher.TWEET_TYPE_USER, this);
-    
+    long userId = getArguments().getLong("user_id");
+    tweetsFetcher = new TweetsFetcher(client, userId, TweetsFetcher.TWEET_TYPE_USER, this);    
     showProgressBar();
     tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
+  }
+  
+  public static UserTimelineFragment newInstance(long userId) {
+    UserTimelineFragment userTimelineFragment = new UserTimelineFragment();
+    Bundle args = new Bundle();
+    args.putLong("user_id", userId);
+    userTimelineFragment.setArguments(args);
+    return userTimelineFragment;
   }
 }

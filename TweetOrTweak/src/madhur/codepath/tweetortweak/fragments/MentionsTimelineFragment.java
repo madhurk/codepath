@@ -9,7 +9,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    tweetsFetcher = new TweetsFetcher(client, TweetsFetcher.TWEET_TYPE_MENTIONS, this);
+    tweetsFetcher = new TweetsFetcher(client, 0, TweetsFetcher.TWEET_TYPE_MENTIONS, this);
     
     showProgressBar();
     tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);

@@ -30,8 +30,9 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   TwitterClient client;  
   TweetViewListener tweetViewListener;
   
-  public TweetsFetcher(TwitterClient client,  int tweetType,
+  public TweetsFetcher(TwitterClient client, long userId, int tweetType,
       TweetViewListener tweetViewListener){
+    this.userId = userId;
     this.tweetType = tweetType;
     this.tweetViewListener = tweetViewListener;
     this.client = client;
