@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class ProfileActivity extends ActionBarActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
     setContentView(R.layout.activity_profile);
     Intent i = getIntent();
     
@@ -32,6 +34,7 @@ public class ProfileActivity extends ActionBarActivity {
       userId = i.getExtras().getLong("user_id");
     }
     
+    setProgressBarIndeterminateVisibility(true);
     loadProfileInfo(userId);
   }
   
@@ -43,6 +46,7 @@ public class ProfileActivity extends ActionBarActivity {
         u = User.fromJSON(json);
         getActionBar().setTitle("@" + u.getScreenName());
         populateProfileHeader();
+        setProgressBarIndeterminateVisibility(false);
         
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         UserTimelineFragment tweetsFragment = UserTimelineFragment.newInstance(u.getUserId());
