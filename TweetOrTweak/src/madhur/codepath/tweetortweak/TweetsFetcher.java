@@ -14,14 +14,13 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class TweetsFetcher extends JsonHttpResponseHandler {
   
-  public static final int FETCH_HOME_TWEETS = 0;
+  public static final int FETCH_ALL_TWEETS = 0;
   public static final int FETCH_OLD_TWEETS = 1;
   public static final int FETCH_NEW_TWEETS = 2;
 
   public static final int TWEET_TYPE_HOME = 0;
   public static final int TWEET_TYPE_MENTIONS = 1;
   
-  private Context context;
   private long oldestTweetId=-1;
   private long newestTweetId=-1;
   private int mode;
@@ -29,9 +28,8 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   TwitterClient client;  
   TweetViewListener tweetViewListener;
   
-  public TweetsFetcher(Context context, TwitterClient client,  int tweetType,
+  public TweetsFetcher(TwitterClient client,  int tweetType,
       TweetViewListener tweetViewListener){
-    this.context = context;
     this.tweetType = tweetType;
     this.tweetViewListener = tweetViewListener;
     this.client = client;
@@ -61,25 +59,22 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
 
     this.mode = mode;
     
-    if(mode == FETCH_HOME_TWEETS){
-      if(tweetType == TWEET_TYPE_HOME)
-        client.getHomeTimeline(-1, -1, context, this);
+    if(mode == FETCH_ALL_TWEETS){
+      client.getTimeline(tweetType, -1, -1, this);
     }else if(mode == FETCH_NEW_TWEETS){
-      if(tweetType == TWEET_TYPE_HOME)
-        client.getHomeTimeline(-1, newestTweetId, context, this);
+      client.getTimeline(tweetType, -1, newestTweetId, this);
     }else if(mode == FETCH_OLD_TWEETS){
       if(oldestTweetId > 0){
-        if(tweetType == TWEET_TYPE_HOME)
-          client.getHomeTimeline(oldestTweetId, -1, context, this);
+        client.getTimeline(tweetType, oldestTweetId, -1, this);
       }
     }
   }
   
   @Override
   public void onFailure(Throwable e, String s) {
-    Toast.makeText(context, "Error fetching tweets", Toast.LENGTH_SHORT).show();
     Log.d("debug", e.toString());
     Log.d("debug", s);
+    tweetViewListener.handleNetworkFailure();
     
     if(mode == FETCH_NEW_TWEETS){
       tweetViewListener.handleRefreshComplete();
@@ -90,7 +85,6 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   public synchronized void onSuccess(int returnCode, JSONArray json){
     
     if(returnCode != 200){
-      Toast.makeText(context, "Error fetching tweets, code="+returnCode, Toast.LENGTH_SHORT).show();
       return;
     }
     
@@ -99,7 +93,7 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     
     if(fetchedTweets.size() > 0){
       
-      if(mode == FETCH_HOME_TWEETS){
+      if(mode == FETCH_ALL_TWEETS){
         Tweet lastTweet = fetchedTweets.get(fetchedTweets.size()-1);
         oldestTweetId = lastTweet.getTweetId();
         

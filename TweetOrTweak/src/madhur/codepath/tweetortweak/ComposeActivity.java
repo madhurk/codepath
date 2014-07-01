@@ -4,10 +4,10 @@ import madhur.codepath.tweetortweak.models.Tweet;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class ComposeActivity extends Activity {
+public class ComposeActivity extends ActionBarActivity {
 
   private TwitterClient client;
   EditText etCompose;  

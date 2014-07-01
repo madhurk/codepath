@@ -9,5 +9,6 @@ public interface TweetViewListener {
   public void appendTweets(List<Tweet> tweets);
   public void replaceTweets(List<Tweet> tweets);
   public void handleRefreshComplete();
-  public void prependTweets(List<Tweet> fetchedTweets);  
+  public void prependTweets(List<Tweet> fetchedTweets);
+  public void handleNetworkFailure();
 }

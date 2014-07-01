@@ -1,0 +1,41 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="CustomActionBarTheme" parent="@Theme.AppCompat.Light.DarkActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->        
+       <item name="android:actionBarStyle">@style/MyActionBar</item>  
+<!--        <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item> -->
+       <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
+       
+       
+       <item name="actionBarStyle">@style/MyActionBar</item>       
+<!--        <item name="actionBarTabStyle">@style/MyActionBarTabs</item> -->
+       <item name="actionBarTabTextStyle">@style/MyActionBarTabText</item>
+       
+              
+    </style>
+
+    <style name="MyActionBar"
+           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+       <item name="android:background">@color/twitter_blue</item>
+       <item name="background">@color/twitter_blue</item>              
+    </style>
+    
+<!-- 	<style name="MyActionBarTabs" parent="@style/Widget.AppCompat.ActionBar.TabView"> -->
+<!--     	<item name="android:background">@color/white</item> -->
+<!--     	<item name="background">@color/white</item>     -->
+<!-- 	</style> -->
+
+	<style name="MyActionBarTabText" parent="@style/Widget.AppCompat.ActionBar.TabText">
+    	<item name="android:textColor">@color/twitter_blue</item>
+	</style>
+	
+
+</resources>

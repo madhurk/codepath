@@ -49,15 +49,36 @@ public class TwitterClient extends OAuthBaseClient {
       client.get(apiUrl, null, handler);
     }    
     
-    public void getHomeTimeline(long maxId, long sinceId, Context context, AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl("statuses/home_timeline.json");
-        RequestParams params = new RequestParams();
-        params.put("count", "50");
-        if(maxId > 0)
-          params.put("max_id", String.valueOf(maxId));
-        if(sinceId > 0)
-          params.put("since_id", String.valueOf(sinceId));
-        //Toast.makeText(context, "Sending twitter request..." , Toast.LENGTH_SHORT).show();
-        client.get(apiUrl, params, handler);
+    public void getTimeline(int tweetType, long maxId, long sinceId, AsyncHttpResponseHandler handler) {
+      String apiUrl;
+      if(tweetType == TweetsFetcher.TWEET_TYPE_HOME)
+        apiUrl = getApiUrl("statuses/home_timeline.json");
+      else if(tweetType == TweetsFetcher.TWEET_TYPE_MENTIONS)
+        apiUrl = getApiUrl("statuses/mentions_timeline.json");
+      else
+        return;
+      
+      RequestParams params = new RequestParams();
+      params.put("count", "20");
+      if(maxId > 0)
+        params.put("max_id", String.valueOf(maxId));
+      if(sinceId > 0)
+        params.put("since_id", String.valueOf(sinceId));
+      //Toast.makeText(context, "Sending twitter request..." , Toast.LENGTH_SHORT).show();
+      client.get(apiUrl, params, handler);
     }    
+    
+    public void getMentionsTimeline (long maxId, long sinceId, Context context, AsyncHttpResponseHandler handler) {
+      
+      String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+      RequestParams params = new RequestParams();
+      params.put("count", "20");
+      if(maxId > 0)
+        params.put("max_id", String.valueOf(maxId));
+      if(sinceId > 0)
+        params.put("since_id", String.valueOf(sinceId));
+      //Toast.makeText(context, "Sending twitter request..." , Toast.LENGTH_SHORT).show();
+      client.get(apiUrl, params, handler);
+
+    }
 }

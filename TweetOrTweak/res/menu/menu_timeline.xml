@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:myapp="http://schemas.android.com/apk/res-auto">
      <item android:id="@+id/action_compose"
           android:title="Compose"
           android:menuCategory="system"
           android:orderInCategory="1"
           android:icon="@drawable/ic_compose"
-          android:onClick="onCompose"          
-          android:showAsAction="always" />
+          myapp:showAsAction="always" />                  
 </menu>

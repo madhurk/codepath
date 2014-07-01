@@ -6,6 +6,9 @@ import java.util.List;
 import madhur.codepath.tweetortweak.EndlessScrollListener;
 import madhur.codepath.tweetortweak.R;
 import madhur.codepath.tweetortweak.TweetArrayAdapter;
+import madhur.codepath.tweetortweak.TweetViewListener;
+import madhur.codepath.tweetortweak.TweetsFetcher;
+import madhur.codepath.tweetortweak.TwitterApplication;
 import madhur.codepath.tweetortweak.TwitterClient;
 import madhur.codepath.tweetortweak.models.Tweet;
 import android.content.Context;
@@ -16,23 +19,32 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
-public class TweetsListFragment extends Fragment {
+public class TweetsListFragment extends Fragment implements
+  TweetViewListener{
 
   private List<Tweet> tweets;
   private TweetArrayAdapter aTweets;
   private PullToRefreshListView lvTweets; 
-
+  
+  protected TwitterClient client;
+  protected TweetsFetcher tweetsFetcher;
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {    
     
     super.onCreate(savedInstanceState);
+    
+    client =  TwitterApplication.getRestClient();
+    
     tweets = new ArrayList<Tweet>();
     aTweets = new TweetArrayAdapter(getActivity(), tweets);
+    
   }
   
   @Override
@@ -43,6 +55,30 @@ public class TweetsListFragment extends Fragment {
     
     lvTweets = (PullToRefreshListView)v.findViewById(R.id.lvTweets);
     lvTweets.setAdapter(aTweets);
+    
+    
+    setScrollListener(new EndlessScrollListener() {      
+      @Override
+      public void onLoadMore(int page, int totalItemsCount) {
+        if(isNetworkAvailable()){
+          tweetsFetcher.fetch(TweetsFetcher.FETCH_OLD_TWEETS);
+        }else{
+          toastNoNetwork();
+        }
+      }
+    });
+    
+    setRefreshListener(new OnRefreshListener() {
+      @Override
+      public void onRefresh() {
+        if(isNetworkAvailable()){
+          tweetsFetcher.fetch(TweetsFetcher.FETCH_NEW_TWEETS);
+        }else{
+          refreshView();
+          toastNoNetwork();
+        }
+      }
+    });
     
     return v;  
   }
@@ -92,14 +128,43 @@ public class TweetsListFragment extends Fragment {
   }
   
   @Override
-  public void onStop(){
-    if(aTweets != null){
-      for(int i = 0; i < aTweets.getCount(); ++i){
-        Tweet tweet = aTweets.getItem(i);
-        tweet.getUser().save();
-        tweet.save();
-      }
-    }
-    super.onStop();
+  public void appendTweets(List<Tweet> tweets) {
+    append(tweets);
+    hideProgressBar();
+  }
+
+  @Override
+  public void replaceTweets(List<Tweet> tweets) {
+    clear();
+    append(tweets);
+    hideProgressBar();
+  }
+  
+  @Override
+  public void prependTweets(List<Tweet> tweets) {    
+    prepend(tweets);
+    hideProgressBar();
+  }
+
+  @Override
+  public void handleRefreshComplete() {
+    refreshView();
+    hideProgressBar();
+  }
+
+  @Override
+  public void handleNetworkFailure() {
+    Toast.makeText(getActivity(), "Error fetching tweets", Toast.LENGTH_SHORT).show();
+    hideProgressBar();
+  }
+  
+  // Should be called manually when an async task has started
+  public void showProgressBar() {
+      getActivity().setProgressBarIndeterminateVisibility(true); 
+  }
+
+  // Should be called when an async task has finished
+  public void hideProgressBar() {
+    getActivity().setProgressBarIndeterminateVisibility(false); 
   }
 }
