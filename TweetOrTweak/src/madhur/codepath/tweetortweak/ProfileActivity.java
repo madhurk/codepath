@@ -23,13 +23,19 @@ public class ProfileActivity extends ActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_profile);
+    Intent i = getIntent();
     
-    loadProfileInfo();
+    long userId = 0;
+    if(i.getExtras() != null){
+      i.getExtras().getLong("user_id");
+    }
+    
+    loadProfileInfo(userId);
   }
   
   
-  private void loadProfileInfo(){
-    TwitterApplication.getRestClient().getSelfInfo(new JsonHttpResponseHandler(){
+  private void loadProfileInfo(long userId){
+    TwitterApplication.getRestClient().getUserInfo(userId, new JsonHttpResponseHandler(){
       @Override
       public void onSuccess(JSONObject json) {
         u = User.fromJSON(json);

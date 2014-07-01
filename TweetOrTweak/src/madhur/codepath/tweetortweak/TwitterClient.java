@@ -43,13 +43,20 @@ public class TwitterClient extends OAuthBaseClient {
 
       client.post(apiUrl, params, handler);
     }
-    
-    public void getSelfInfo(AsyncHttpResponseHandler handler){
-      String apiUrl = getApiUrl("account/verify_credentials.json");
-      client.get(apiUrl, null, handler);
+
+    public void getUserInfo(long userId, AsyncHttpResponseHandler handler){
+      if(userId == 0){
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        client.get(apiUrl, null, handler);
+      }else{
+        String apiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", String.valueOf(userId));
+        client.get(apiUrl, params, handler);
+      }
     }    
     
-    public void getTimeline(int tweetType, long maxId, long sinceId, AsyncHttpResponseHandler handler) {
+    public void getTimeline(long userId, int tweetType, long maxId, long sinceId, AsyncHttpResponseHandler handler) {
       String apiUrl;
       if(tweetType == TweetsFetcher.TWEET_TYPE_HOME)
         apiUrl = getApiUrl("statuses/home_timeline.json");
@@ -66,6 +73,8 @@ public class TwitterClient extends OAuthBaseClient {
         params.put("max_id", String.valueOf(maxId));
       if(sinceId > 0)
         params.put("since_id", String.valueOf(sinceId));
+      if(userId > 0)
+        params.put("user_id", String.valueOf(userId));
       //Toast.makeText(context, "Sending twitter request..." , Toast.LENGTH_SHORT).show();
       client.get(apiUrl, params, handler);
     }    

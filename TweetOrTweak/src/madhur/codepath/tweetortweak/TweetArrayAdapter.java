@@ -8,8 +8,10 @@ import java.util.Locale;
 
 import madhur.codepath.tweetortweak.models.Tweet;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
+  
+  private Context context;
   
   private static class ViewHolder {
     ImageView ivProfileImageView;
@@ -29,11 +33,12 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
   public TweetArrayAdapter(Context context, List<Tweet> tweets){
     super(context, 0, tweets);
+    this.context = context;
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    Tweet tweet = getItem(position);
+    final Tweet tweet = getItem(position);
     
     ViewHolder viewHolder;
     if(convertView == null){
@@ -43,6 +48,16 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
       convertView = inflator.inflate(R.layout.tweet_item, parent, false);
       
       viewHolder.ivProfileImageView = (ImageView)convertView.findViewById(R.id.ivProfileImage);
+      
+      viewHolder.ivProfileImageView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          long userId = tweet.getUser().getUserId();
+          Intent userIntent = new Intent(context, ProfileActivity.class);
+          userIntent.putExtra("user_id", userId);
+          context.startActivity(userIntent);
+        }
+    });
       viewHolder.tvScreenName = (TextView)convertView.findViewById(R.id.tvScreenName);
       viewHolder.tvFullName = (TextView)convertView.findViewById(R.id.tvFullName);
       viewHolder.tvBody = (TextView)convertView.findViewById(R.id.tvBody);

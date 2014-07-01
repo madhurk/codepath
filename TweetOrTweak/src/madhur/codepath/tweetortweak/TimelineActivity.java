@@ -49,7 +49,7 @@ public class TimelineActivity extends ActionBarActivity {
   }
   
   private void populateSelfInfo(){
-    client.getSelfInfo(new JsonHttpResponseHandler(){
+    client.getUserInfo(0, new JsonHttpResponseHandler(){
       @Override
       public void onFailure(Throwable e, String s) {
         Toast.makeText(getApplicationContext(), "Error getting Json response", Toast.LENGTH_SHORT).show();

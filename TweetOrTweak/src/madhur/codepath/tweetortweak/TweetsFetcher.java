@@ -22,7 +22,7 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   public static final int TWEET_TYPE_MENTIONS = 1;
   public static final int TWEET_TYPE_USER = 2;
 
- 
+  private long userId = 0;
   private long oldestTweetId=-1;
   private long newestTweetId=-1;
   private int mode;
@@ -62,12 +62,12 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     this.mode = mode;
     
     if(mode == FETCH_ALL_TWEETS){
-      client.getTimeline(tweetType, -1, -1, this);
+      client.getTimeline(userId, tweetType, -1, -1, this);
     }else if(mode == FETCH_NEW_TWEETS){
-      client.getTimeline(tweetType, -1, newestTweetId, this);
+      client.getTimeline(userId, tweetType, -1, newestTweetId, this);
     }else if(mode == FETCH_OLD_TWEETS){
       if(oldestTweetId > 0){
-        client.getTimeline(tweetType, oldestTweetId, -1, this);
+        client.getTimeline(userId, tweetType, oldestTweetId, -1, this);
       }
     }
   }
