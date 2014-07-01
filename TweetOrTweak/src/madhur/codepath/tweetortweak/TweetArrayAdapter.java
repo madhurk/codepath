@@ -48,16 +48,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
       convertView = inflator.inflate(R.layout.tweet_item, parent, false);
       
       viewHolder.ivProfileImageView = (ImageView)convertView.findViewById(R.id.ivProfileImage);
-      
-      viewHolder.ivProfileImageView.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          long userId = tweet.getUser().getUserId();
-          Intent userIntent = new Intent(context, ProfileActivity.class);
-          userIntent.putExtra("user_id", userId);
-          context.startActivity(userIntent);
-        }
-    });
       viewHolder.tvScreenName = (TextView)convertView.findViewById(R.id.tvScreenName);
       viewHolder.tvFullName = (TextView)convertView.findViewById(R.id.tvFullName);
       viewHolder.tvBody = (TextView)convertView.findViewById(R.id.tvBody);
@@ -74,6 +64,16 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     viewHolder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
     viewHolder.tvBody.setText(tweet.getBody());
     viewHolder.tvFullName.setText(tweet.getUser().getName());
+    
+    viewHolder.ivProfileImageView.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        long userId = tweet.getUser().getUserId();
+        Intent userIntent = new Intent(context, ProfileActivity.class);
+        userIntent.putExtra("user_id", userId);
+        context.startActivity(userIntent);
+      }
+    });
     
     String createdAt = tweet.getCreatedAt();
     String ts = getTs(createdAt);
