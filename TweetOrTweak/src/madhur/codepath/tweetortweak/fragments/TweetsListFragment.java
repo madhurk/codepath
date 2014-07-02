@@ -10,10 +10,8 @@ import madhur.codepath.tweetortweak.TweetViewListener;
 import madhur.codepath.tweetortweak.TweetsFetcher;
 import madhur.codepath.tweetortweak.TwitterApplication;
 import madhur.codepath.tweetortweak.TwitterClient;
+import madhur.codepath.tweetortweak.Utils;
 import madhur.codepath.tweetortweak.models.Tweet;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -59,10 +57,10 @@ public class TweetsListFragment extends Fragment implements
     setScrollListener(new EndlessScrollListener() {      
       @Override
       public void onLoadMore(int page, int totalItemsCount) {
-        if(isNetworkAvailable()){
+        if(Utils.isNetworkAvailable(getActivity())){
           tweetsFetcher.fetch(TweetsFetcher.FETCH_OLD_TWEETS);
         }else{
-          toastNoNetwork();
+          Utils.toastNoNetwork(getActivity());
         }
       }
     });
@@ -70,11 +68,11 @@ public class TweetsListFragment extends Fragment implements
     setRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresh() {
-        if(isNetworkAvailable()){
+        if(Utils.isNetworkAvailable(getActivity())){
           tweetsFetcher.fetch(TweetsFetcher.FETCH_NEW_TWEETS);
         }else{
           refreshView();
-          toastNoNetwork();
+          Utils.toastNoNetwork(getActivity());
         }
       }
     });
@@ -116,18 +114,6 @@ public class TweetsListFragment extends Fragment implements
   
   protected void refreshView(){
     lvTweets.onRefreshComplete();
-  }
-  
-  
-  protected void toastNoNetwork(){
-    Toast.makeText(getActivity(), "Sorry, Internet connection is not available", Toast.LENGTH_SHORT).show();
-  }  
-  
-  protected boolean isNetworkAvailable() {
-    ConnectivityManager connectivityManager 
-          = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
   }
   
   @Override

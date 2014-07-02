@@ -23,7 +23,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 public class TimelineActivity extends ActionBarActivity {
 
   private TwitterClient client;
-  private User self;
   HomeTimelineFragment homeTimelineFragment = null;
   
   private static final int COMPOSE_REQUEST_CODE = 1;
@@ -39,7 +38,6 @@ public class TimelineActivity extends ActionBarActivity {
     super.onCreate(savedInstanceState);
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
     client = TwitterApplication.getRestClient();
-    populateSelfInfo();    
     setContentView(R.layout.activity_timeline);
     
     String currTab = null;
@@ -54,22 +52,6 @@ public class TimelineActivity extends ActionBarActivity {
     ActionBar actionBar = getSupportActionBar();
     Tab currTab = actionBar.getSelectedTab();
     outState.putString("current_tab", (String)currTab.getTag());
-  }
-  
-  private void populateSelfInfo(){
-    client.getUserInfo(0, new JsonHttpResponseHandler(){
-      @Override
-      public void onFailure(Throwable e, String s) {
-        Toast.makeText(getApplicationContext(), "Error getting Json response", Toast.LENGTH_SHORT).show();
-        Log.d("debug", e.toString());
-        Log.d("debug", s);
-      }
-      
-      @Override
-      public void onSuccess(JSONObject json){
-        self = User.fromJSON(json);
-      }
-    });
   }
   
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,9 +82,6 @@ public class TimelineActivity extends ActionBarActivity {
   
   public void onCompose(MenuItem mi){
     Intent i = new Intent(this, ComposeActivity.class);
-    i.putExtra("name", self.getName());
-    i.putExtra("screen_name", self.getScreenName());
-    i.putExtra("profile_image", self.getProfileImg());
     startActivityForResult(i, COMPOSE_REQUEST_CODE);
   }
   

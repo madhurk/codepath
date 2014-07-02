@@ -34,8 +34,12 @@ public class ProfileActivity extends ActionBarActivity {
       userId = i.getExtras().getLong("user_id");
     }
     
-    setProgressBarIndeterminateVisibility(true);
-    loadProfileInfo(userId);
+    if(Utils.isNetworkAvailable(this)){
+      setProgressBarIndeterminateVisibility(true);
+      loadProfileInfo(userId);
+    }else{
+      Utils.toastNoNetwork(this);
+    }
   }
   
   

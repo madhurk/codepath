@@ -73,8 +73,6 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   
   @Override
   public void onFailure(Throwable e, String s) {
-    Log.d("debug", e.toString());
-    Log.d("debug", s);
     tweetViewListener.handleNetworkFailure();
     
     if(mode == FETCH_NEW_TWEETS){

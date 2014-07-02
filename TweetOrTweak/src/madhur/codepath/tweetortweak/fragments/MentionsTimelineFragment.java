@@ -1,6 +1,7 @@
 package madhur.codepath.tweetortweak.fragments;
 
 import madhur.codepath.tweetortweak.TweetsFetcher;
+import madhur.codepath.tweetortweak.Utils;
 import android.os.Bundle;
 
 public class MentionsTimelineFragment extends TweetsListFragment {
@@ -11,7 +12,11 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     
     tweetsFetcher = new TweetsFetcher(client, 0, TweetsFetcher.TWEET_TYPE_MENTIONS, this);
     
-    showProgressBar();
-    tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
+    if(Utils.isNetworkAvailable(getActivity())){
+      showProgressBar();
+      tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
+    }else{
+      Utils.toastNoNetwork(getActivity());
+    }
   }
 }

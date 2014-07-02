@@ -1,6 +1,7 @@
 package madhur.codepath.tweetortweak;
 
 import madhur.codepath.tweetortweak.models.Tweet;
+import madhur.codepath.tweetortweak.models.User;
 
 import org.json.JSONObject;
 
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,29 +25,17 @@ public class ComposeActivity extends ActionBarActivity {
 
   private TwitterClient client;
   EditText etCompose;  
+  User self;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_compose);
-    
-    Intent i = getIntent();
-    String fullName = i.getStringExtra("name");
-    String screenName = i.getStringExtra("screen_name");
-    String image = i.getStringExtra("profile_image");
         
-    TextView tvFullName = (TextView)findViewById(R.id.tvComposeFullName);
-    tvFullName.setText(fullName);
-    
-    TextView tvScreenName = (TextView)findViewById(R.id.tvComposeScreenName);
-    tvScreenName.setText(screenName);    
-    
-    ImageView ivProfileImg = (ImageView)findViewById(R.id.ivComposeProfileImg);
-    ivProfileImg.setImageResource(android.R.color.transparent);
-    ImageLoader loader = ImageLoader.getInstance();
-    loader.displayImage(image, ivProfileImg);
-
-    
+    client = TwitterApplication.getRestClient();
+    self = new User();
+    populateSelfInfo();
+        
     final TextView tvRemainingCharcount = (TextView)findViewById(R.id.tvRemaningCharCount);
     
     etCompose = (EditText)findViewById(R.id.etComposeTweet);
@@ -63,9 +53,37 @@ public class ComposeActivity extends ActionBarActivity {
       @Override
       public void afterTextChanged(Editable s) {
       }
-    });
+    });    
+  }
+  
+  private void populateSelfInfo(){
+    if(!Utils.isNetworkAvailable(this)){
+      Utils.toastNoNetwork(this);
+      return;
+    }
     
-    client = TwitterApplication.getRestClient();
+    client.getUserInfo(0, new JsonHttpResponseHandler(){
+    @Override
+    public void onFailure(Throwable e, String s) {
+      Toast.makeText(getApplicationContext(), "Network error", Toast.LENGTH_SHORT).show();
+    }
+    
+    @Override
+    public void onSuccess(JSONObject json){
+      self = User.fromJSON(json);
+      
+      TextView tvFullName = (TextView)findViewById(R.id.tvComposeFullName);
+      tvFullName.setText(self.getName());
+      
+      TextView tvScreenName = (TextView)findViewById(R.id.tvComposeScreenName);
+      tvScreenName.setText(self.getScreenName());    
+      
+      ImageView ivProfileImg = (ImageView)findViewById(R.id.ivComposeProfileImg);
+      ivProfileImg.setImageResource(android.R.color.transparent);
+      ImageLoader loader = ImageLoader.getInstance();
+      loader.displayImage(self.getProfileImg(), ivProfileImg);
+    }
+    });
   }
   
   @Override
@@ -95,7 +113,18 @@ public class ComposeActivity extends ActionBarActivity {
   public void onSend(MenuItem mi){
     Tweet tweet = new Tweet();
     tweet.setBody(etCompose.getText().toString());
+    
+    if(!Utils.isNetworkAvailable(this)){
+      Utils.toastNoNetwork(this);
+      return;
+    }
+    
     client.sendTweet(tweet, new JsonHttpResponseHandler(){     
+      
+      @Override
+      public void onFailure(Throwable e, String s) {
+        Toast.makeText(getApplicationContext(), "Network error, try again", Toast.LENGTH_SHORT).show();
+      }
       
       @Override
       public void onSuccess(JSONObject arg0) {
