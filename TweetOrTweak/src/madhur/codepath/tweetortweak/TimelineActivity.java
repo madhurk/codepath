@@ -24,6 +24,7 @@ public class TimelineActivity extends ActionBarActivity {
 
   private TwitterClient client;
   private User self;
+  HomeTimelineFragment homeTimelineFragment = null;
   
   private static final int COMPOSE_REQUEST_CODE = 1;
   
@@ -44,7 +45,8 @@ public class TimelineActivity extends ActionBarActivity {
     String currTab = null;
     if(savedInstanceState != null)
       currTab = savedInstanceState.getString("current_tab");
-    setupTabs(currTab);        
+    setupTabs(currTab);       
+    
   }
   
   @Override
@@ -139,12 +141,27 @@ public class TimelineActivity extends ActionBarActivity {
     }
   }
 
+  private HomeTimelineFragment getHomeTimelineFragment(){
+    
+    if(homeTimelineFragment == null){
+      homeTimelineFragment = (HomeTimelineFragment)
+        getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME_TAG);
+    }
+    
+    return homeTimelineFragment;
+  }
   
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
     if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE) {
-      HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)
-          getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME_TAG);
-      homeTimelineFragment.fetchNewTweets();
+      HomeTimelineFragment fragment = getHomeTimelineFragment();
+      fragment.fetchNewTweets();
     }
   }  
+  
+  @Override
+  protected void onStop() {
+    HomeTimelineFragment fragment = getHomeTimelineFragment();
+    fragment.saveTweets();
+    super.onStop();
+  }
 }

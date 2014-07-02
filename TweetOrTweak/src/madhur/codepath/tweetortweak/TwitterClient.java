@@ -33,6 +33,7 @@ public class TwitterClient extends OAuthBaseClient {
         
     public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
+        client.setTimeout(5000);
     }
     
     public void sendTweet(Tweet tweet, AsyncHttpResponseHandler handler){
@@ -90,6 +91,5 @@ public class TwitterClient extends OAuthBaseClient {
         params.put("since_id", String.valueOf(sinceId));
       //Toast.makeText(context, "Sending twitter request..." , Toast.LENGTH_SHORT).show();
       client.get(apiUrl, params, handler);
-
     }
 }

@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 import eu.erikw.PullToRefreshListView;
@@ -98,6 +97,10 @@ public class TweetsListFragment extends Fragment implements
   
   protected void append(List<Tweet> tweets){
     aTweets.addAll(tweets);
+  }
+  
+  protected List<Tweet> getCurrentTweets(){
+    return tweets;
   }
   
   protected void prepend(List<Tweet> tweets){

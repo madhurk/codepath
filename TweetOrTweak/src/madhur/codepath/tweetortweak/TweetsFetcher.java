@@ -6,9 +6,7 @@ import madhur.codepath.tweetortweak.models.Tweet;
 
 import org.json.JSONArray;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
