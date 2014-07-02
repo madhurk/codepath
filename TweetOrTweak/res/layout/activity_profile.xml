@@ -37,7 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvProfileName"
         android:layout_below="@+id/tvProfileName"
-                android:textSize="14sp"        
+        android:textSize="14sp"       
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="bold"                 
         android:text="" />
                         
     </RelativeLayout>
@@ -57,14 +59,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
+        android:layout_marginRight="20dp"        
+        android:textColor="@android:color/darker_gray"
         android:text="" />
+                    
+                                        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginRight="20dp"                
+        android:text="|" />
                     
                     <TextView
         android:id="@+id/tvFollowing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:layout_marginLeft="20dp"
+        android:textColor="@android:color/darker_gray"        
         android:text="" />
                     
     </LinearLayout>
