@@ -14,5 +14,9 @@ public class HomeTimelineFragment extends TweetsListFragment{
     showProgressBar();
     tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
   }
+  
+  public void fetchNewTweets(){
+    tweetsFetcher.fetch(TweetsFetcher.FETCH_NEW_TWEETS);
+  }
 
 }

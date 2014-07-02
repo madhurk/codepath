@@ -25,7 +25,13 @@ public class TimelineActivity extends ActionBarActivity {
   private TwitterClient client;
   private User self;
   
-  private static final int COMPOSE_REQUEST_CODE = 1;  
+  private static final int COMPOSE_REQUEST_CODE = 1;
+  
+  private static final String FRAGMENT_HOME_TAG="home";
+  private static final String FRAGMENT_MENTIONS_TAG="mentions";
+  
+  private static final String TAB_HOME_TAG="HomeTimelineTab";
+  private static final String TAB_MENTIONS_TAG="MentionsTimelineTab";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -112,32 +118,33 @@ public class TimelineActivity extends ActionBarActivity {
         .newTab()
         .setText("Home")
         .setIcon(R.drawable.ic_home)
-        .setTag("HomeTimelineFragment")
+        .setTag(TAB_HOME_TAG)
         .setTabListener(new SupportFragmentTabListener<HomeTimelineFragment>(R.id.flContainer, this,
-                    "home", HomeTimelineFragment.class));
+            FRAGMENT_HOME_TAG, HomeTimelineFragment.class));
 
     Tab mentionsTab = actionBar
         .newTab()
         .setText("Mentions")
         .setIcon(R.drawable.ic_mentions)
-        .setTag("MentionsTimelineFragment")
+        .setTag(TAB_MENTIONS_TAG)
         .setTabListener(new SupportFragmentTabListener<MentionsTimelineFragment>(R.id.flContainer, this,
-                    "mentions", MentionsTimelineFragment.class));
+            FRAGMENT_MENTIONS_TAG, MentionsTimelineFragment.class));
 
-    if(currTab == null || currTab.equals("HomeTimelineFragment")){
+    if(currTab == null || currTab.equals(TAB_HOME_TAG)){
       actionBar.addTab(homeTab, 0, true);
       actionBar.addTab(mentionsTab, 1, false);
-    }else if(currTab.equals("MentionsTimelineFragment")){
+    }else if(currTab.equals(TAB_MENTIONS_TAG)){
       actionBar.addTab(homeTab, 0, false);
       actionBar.addTab(mentionsTab, 1, true);      
     }
   }
 
   
-//  protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
-//    if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE) {
-//      tweetFetcher.fetch(TwitterClient.FETCH_NEW_TWEETS);
-//    }
-//  }  
-
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
+    if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE) {
+      HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)
+          getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME_TAG);
+      homeTimelineFragment.fetchNewTweets();
+    }
+  }  
 }
