@@ -1,7 +1,10 @@
 package madhur.codepath.tweetortweak.fragments;
 
+import java.util.List;
+
 import madhur.codepath.tweetortweak.TweetsFetcher;
 import madhur.codepath.tweetortweak.Utils;
+import madhur.codepath.tweetortweak.models.Tweet;
 import android.os.Bundle;
 
 public class MentionsTimelineFragment extends TweetsListFragment {
@@ -10,13 +13,14 @@ public class MentionsTimelineFragment extends TweetsListFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    tweetsFetcher = new TweetsFetcher(client, 0, TweetsFetcher.TWEET_TYPE_MENTIONS, this);
+    tweetsFetcher = new TweetsFetcher(client, 0, Tweet.TYPE_MENTION, this);
     
     if(Utils.isNetworkAvailable(getActivity())){
       showProgressBar();
       tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
     }else{
-      Utils.toastNoNetwork(getActivity());
+      List<Tweet> savedTweets = tweetsFetcher.loadSavedTweets(Tweet.TYPE_MENTION);
+      replaceTweets(savedTweets);
     }
   }
 }

@@ -16,6 +16,10 @@ import com.activeandroid.query.Select;
 @Table(name = "items")
 public class Tweet extends Model{
   
+  public static final int TYPE_HOME = 0;
+  public static final int TYPE_MENTION = 1;
+  public static final int TYPE_USER = 2;
+  
   @Column(name = "body")
   private String body;
   
@@ -27,6 +31,9 @@ public class Tweet extends Model{
   
   @Column(name = "user", onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
   private User user;  
+  
+  @Column(name = "type")
+  private int type;
   
   public Tweet(){
      super();
@@ -87,14 +94,23 @@ public class Tweet extends Model{
   public User getUser() {
     return user;
   }
+  
+  public void setType(int type){
+    this.type = type;
+  }
 
   public String toString(){
     return user.getScreenName() + ": " + body;        
   }
   
-  public static List<Tweet> getSavedTweets() {
+  public int getType(){
+    return type;
+  }
+  
+  public static List<Tweet> getSavedTweets(int type) {
     return new Select()
       .from(Tweet.class)
+      .where("type = ?", type)
       .orderBy("created_at DESC")
       .execute();
   }

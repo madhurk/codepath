@@ -6,8 +6,6 @@ import madhur.codepath.tweetortweak.models.Tweet;
 
 import org.json.JSONArray;
 
-import android.util.Log;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class TweetsFetcher extends JsonHttpResponseHandler {
@@ -15,10 +13,6 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
   public static final int FETCH_ALL_TWEETS = 0;
   public static final int FETCH_OLD_TWEETS = 1;
   public static final int FETCH_NEW_TWEETS = 2;
-
-  public static final int TWEET_TYPE_HOME = 0;
-  public static final int TWEET_TYPE_MENTIONS = 1;
-  public static final int TWEET_TYPE_USER = 2;
 
   private long userId = 0;
   private long oldestTweetId=-1;
@@ -36,8 +30,8 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     this.client = client;
   }
   
-  public synchronized List<Tweet> loadSavedTweets(){
-    List<Tweet> savedTweets = Tweet.getSavedTweets();
+  public synchronized List<Tweet> loadSavedTweets(int type){
+    List<Tweet> savedTweets = Tweet.getSavedTweets(type);
     if(savedTweets != null && savedTweets.size() > 0){
       
       Tweet lastTweet = savedTweets.get(savedTweets.size()-1);
@@ -91,6 +85,10 @@ public class TweetsFetcher extends JsonHttpResponseHandler {
     //Toast.makeText(context, "Number of tweets fetched="+fetchedTweets.size(), Toast.LENGTH_SHORT).show();
     
     if(fetchedTweets.size() > 0){
+      
+      for(Tweet t : fetchedTweets){
+        t.setType(tweetType);
+      }
       
       if(mode == FETCH_ALL_TWEETS){
         Tweet lastTweet = fetchedTweets.get(fetchedTweets.size()-1);

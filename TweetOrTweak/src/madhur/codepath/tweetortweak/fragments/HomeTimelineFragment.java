@@ -13,31 +13,14 @@ public class HomeTimelineFragment extends TweetsListFragment{
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    tweetsFetcher = new TweetsFetcher(client, 0, TweetsFetcher.TWEET_TYPE_HOME, this);
-    
-    showProgressBar();
+    tweetsFetcher = new TweetsFetcher(client, 0, Tweet.TYPE_HOME, this);
     
     if(Utils.isNetworkAvailable(getActivity())){
+      showProgressBar();
       tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
     }else{
-      List<Tweet> savedTweets = tweetsFetcher.loadSavedTweets();
+      List<Tweet> savedTweets = tweetsFetcher.loadSavedTweets(Tweet.TYPE_HOME);
       replaceTweets(savedTweets);
     }
-  }
-  
-  public void fetchNewTweets(){
-    tweetsFetcher.fetch(TweetsFetcher.FETCH_NEW_TWEETS);
-  }
-  
-  public void saveTweets() {
-    List<Tweet> currentTweets = getCurrentTweets() ;
-    if(currentTweets != null){
-      for(int i = 0; i < currentTweets.size(); ++i){
-        Tweet tweet = currentTweets.get(i);
-        tweet.getUser().save();
-        tweet.save();
-      }
-    }
-  }
-
+  }  
 }

@@ -81,6 +81,21 @@ public class TweetsListFragment extends Fragment implements
   }
   
   
+  public void fetchNewTweets(){
+    tweetsFetcher.fetch(TweetsFetcher.FETCH_NEW_TWEETS);
+  }
+  
+  public void saveTweets() {
+    List<Tweet> currentTweets = getCurrentTweets() ;
+    if(currentTweets != null){
+      for(int i = 0; i < currentTweets.size(); ++i){
+        Tweet tweet = currentTweets.get(i);
+        tweet.getUser().save();
+        tweet.save();
+      }
+    }
+  }
+  
   public void setScrollListener(OnScrollListener listener){
     lvTweets.setOnScrollListener(listener);
   }

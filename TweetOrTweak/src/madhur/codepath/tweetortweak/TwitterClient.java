@@ -59,11 +59,11 @@ public class TwitterClient extends OAuthBaseClient {
     
     public void getTimeline(long userId, int tweetType, long maxId, long sinceId, AsyncHttpResponseHandler handler) {
       String apiUrl;
-      if(tweetType == TweetsFetcher.TWEET_TYPE_HOME)
+      if(tweetType == Tweet.TYPE_HOME)
         apiUrl = getApiUrl("statuses/home_timeline.json");
-      else if(tweetType == TweetsFetcher.TWEET_TYPE_MENTIONS)
+      else if(tweetType == Tweet.TYPE_MENTION)
         apiUrl = getApiUrl("statuses/mentions_timeline.json");
-      else if(tweetType == TweetsFetcher.TWEET_TYPE_USER)
+      else if(tweetType == Tweet.TYPE_USER)
         apiUrl = getApiUrl("statuses/user_timeline.json");
       else
         return;

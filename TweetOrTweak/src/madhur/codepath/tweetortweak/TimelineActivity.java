@@ -22,8 +22,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class TimelineActivity extends ActionBarActivity {
 
-  private TwitterClient client;
   HomeTimelineFragment homeTimelineFragment = null;
+  MentionsTimelineFragment mentionsTimelineFragment = null;
   
   private static final int COMPOSE_REQUEST_CODE = 1;
   
@@ -37,7 +37,6 @@ public class TimelineActivity extends ActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
-    client = TwitterApplication.getRestClient();
     setContentView(R.layout.activity_timeline);
     
     String currTab = null;
@@ -130,6 +129,16 @@ public class TimelineActivity extends ActionBarActivity {
     return homeTimelineFragment;
   }
   
+  private MentionsTimelineFragment getMentionsTimelineFragment(){
+    
+    if(mentionsTimelineFragment == null){
+      mentionsTimelineFragment = (MentionsTimelineFragment)
+        getSupportFragmentManager().findFragmentByTag(FRAGMENT_MENTIONS_TAG);
+    }
+    
+    return mentionsTimelineFragment;
+  }
+  
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
     if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE) {
       HomeTimelineFragment fragment = getHomeTimelineFragment();
@@ -139,8 +148,14 @@ public class TimelineActivity extends ActionBarActivity {
   
   @Override
   protected void onStop() {
-    HomeTimelineFragment fragment = getHomeTimelineFragment();
-    fragment.saveTweets();
+    HomeTimelineFragment homeFrag = getHomeTimelineFragment();
+    if(homeFrag != null)
+      homeFrag.saveTweets();
+    
+    MentionsTimelineFragment mentionsFrag = getMentionsTimelineFragment();
+    if(mentionsFrag != null)
+      mentionsFrag.saveTweets();
+    
     super.onStop();
   }
 }

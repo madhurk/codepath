@@ -1,6 +1,7 @@
 package madhur.codepath.tweetortweak.fragments;
 
 import madhur.codepath.tweetortweak.TweetsFetcher;
+import madhur.codepath.tweetortweak.models.Tweet;
 import android.os.Bundle;
 
 public class UserTimelineFragment extends TweetsListFragment {
@@ -10,7 +11,7 @@ public class UserTimelineFragment extends TweetsListFragment {
     super.onCreate(savedInstanceState);
     
     long userId = getArguments().getLong("user_id");
-    tweetsFetcher = new TweetsFetcher(client, userId, TweetsFetcher.TWEET_TYPE_USER, this);    
+    tweetsFetcher = new TweetsFetcher(client, userId, Tweet.TYPE_USER, this);    
     showProgressBar();
     tweetsFetcher.fetch(TweetsFetcher.FETCH_ALL_TWEETS);
   }
