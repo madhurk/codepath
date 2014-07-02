@@ -34,7 +34,7 @@ public class SupportFragmentTabListener<T extends Fragment> implements TabListen
         if (mFragment == null) {
             // If not, instantiate and add it to the activity
             mFragment = Fragment.instantiate(mActivity, mClass.getName());
-            sft.replace(mfragmentContainerId, mFragment, mTag);
+            sft.add(mfragmentContainerId, mFragment, mTag);
         } else {
             // If it exists, simply attach it in order to show it
             sft.attach(mFragment);

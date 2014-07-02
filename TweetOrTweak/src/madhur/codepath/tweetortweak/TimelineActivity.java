@@ -157,5 +157,5 @@ public class TimelineActivity extends ActionBarActivity {
       mentionsFrag.saveTweets();
     
     super.onStop();
-  }
+  }  
 }
