@@ -51,4 +51,5 @@ public class SupportFragmentTabListener<T extends Fragment> implements TabListen
     public void onTabReselected(Tab tab, FragmentTransaction sft) {
         // User selected the already selected tab. Usually do nothing.
     }
+
 }

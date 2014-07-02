@@ -2,7 +2,6 @@ package madhur.codepath.tweetortweak;
 
 import madhur.codepath.tweetortweak.fragments.HomeTimelineFragment;
 import madhur.codepath.tweetortweak.fragments.MentionsTimelineFragment;
-import madhur.codepath.tweetortweak.fragments.TweetsListFragment;
 import madhur.codepath.tweetortweak.models.User;
 
 import org.json.JSONObject;
@@ -23,7 +22,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class TimelineActivity extends ActionBarActivity {
 
-  private TweetsListFragment fragmentTweetsList;
   private TwitterClient client;
   private User self;
   
@@ -36,16 +34,18 @@ public class TimelineActivity extends ActionBarActivity {
     client = TwitterApplication.getRestClient();
     populateSelfInfo();    
     setContentView(R.layout.activity_timeline);
-    setupTabs();
-        
-//    // Begin the transaction
-//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//    // Replace the container with the new fragment
-//    ft.replace(R.id.your_placeholder, new HomeTimelineFragment());
-//    // or ft.add(R.id.your_placeholder, new FooFragment());
-//    // Execute the changes specified
-//    ft.commit();
-//    
+    
+    String currTab = null;
+    if(savedInstanceState != null)
+      currTab = savedInstanceState.getString("current_tab");
+    setupTabs(currTab);        
+  }
+  
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    ActionBar actionBar = getSupportActionBar();
+    Tab currTab = actionBar.getSelectedTab();
+    outState.putString("current_tab", (String)currTab.getTag());
   }
   
   private void populateSelfInfo(){
@@ -103,12 +103,12 @@ public class TimelineActivity extends ActionBarActivity {
     startActivity(i);
   }
   
-  private void setupTabs() {
+  private void setupTabs(String currTab) {
     ActionBar actionBar = getSupportActionBar();
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     actionBar.setDisplayShowTitleEnabled(true);
 
-    Tab tab1 = actionBar
+    Tab homeTab = actionBar
         .newTab()
         .setText("Home")
         .setIcon(R.drawable.ic_home)
@@ -116,18 +116,22 @@ public class TimelineActivity extends ActionBarActivity {
         .setTabListener(new SupportFragmentTabListener<HomeTimelineFragment>(R.id.flContainer, this,
                     "home", HomeTimelineFragment.class));
 
-    actionBar.addTab(tab1);
-    actionBar.selectTab(tab1);
-
-    Tab tab2 = actionBar
+    Tab mentionsTab = actionBar
         .newTab()
         .setText("Mentions")
         .setIcon(R.drawable.ic_mentions)
         .setTag("MentionsTimelineFragment")
         .setTabListener(new SupportFragmentTabListener<MentionsTimelineFragment>(R.id.flContainer, this,
                     "mentions", MentionsTimelineFragment.class));
-    actionBar.addTab(tab2);
-}
+
+    if(currTab == null || currTab.equals("HomeTimelineFragment")){
+      actionBar.addTab(homeTab, 0, true);
+      actionBar.addTab(mentionsTab, 1, false);
+    }else if(currTab.equals("MentionsTimelineFragment")){
+      actionBar.addTab(homeTab, 0, false);
+      actionBar.addTab(mentionsTab, 1, true);      
+    }
+  }
 
   
 //  protected void onActivityResult(int requestCode, int resultCode, Intent data) {    
