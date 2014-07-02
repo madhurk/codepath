@@ -47,10 +47,10 @@ public class ProfileActivity extends ActionBarActivity {
     TwitterApplication.getRestClient().getUserInfo(userId, new JsonHttpResponseHandler(){
       @Override
       public void onSuccess(JSONObject json) {
+        setProgressBarIndeterminateVisibility(false);
         u = User.fromJSON(json);
         getActionBar().setTitle("@" + u.getScreenName());
         populateProfileHeader();
-        setProgressBarIndeterminateVisibility(false);
         
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         UserTimelineFragment tweetsFragment = UserTimelineFragment.newInstance(u.getUserId());
