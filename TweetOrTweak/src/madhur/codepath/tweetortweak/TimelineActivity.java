@@ -2,22 +2,19 @@ package madhur.codepath.tweetortweak;
 
 import madhur.codepath.tweetortweak.fragments.HomeTimelineFragment;
 import madhur.codepath.tweetortweak.fragments.MentionsTimelineFragment;
-import madhur.codepath.tweetortweak.models.User;
-
-import org.json.JSONObject;
-
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.Window;
-import android.widget.Toast;
-
-import com.loopj.android.http.JsonHttpResponseHandler;
+import android.widget.TabHost;
+import android.widget.TextView;
 
 
 public class TimelineActivity extends ActionBarActivity {
@@ -94,18 +91,29 @@ public class TimelineActivity extends ActionBarActivity {
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     actionBar.setDisplayShowTitleEnabled(true);
 
+    Display mDisplay= getWindowManager().getDefaultDisplay();
+    int rotation = mDisplay.getRotation();
+    
+    int homeIcon = R.drawable.ic_home;
+    int mentionsIcon = R.drawable.ic_mentions;
+    
+    if(rotation == Surface.ROTATION_180 || rotation == Surface.ROTATION_270){
+      homeIcon = R.drawable.ic_home_landscape;
+      mentionsIcon = R.drawable.ic_mentions_landscape;
+    }
+    
     Tab homeTab = actionBar
         .newTab()
         .setText("Home")
-        .setIcon(R.drawable.ic_home)
+        .setIcon(homeIcon)
         .setTag(TAB_HOME_TAG)
         .setTabListener(new SupportFragmentTabListener<HomeTimelineFragment>(R.id.flContainer, this,
             FRAGMENT_HOME_TAG, HomeTimelineFragment.class));
-
+    
     Tab mentionsTab = actionBar
         .newTab()
         .setText("Mentions")
-        .setIcon(R.drawable.ic_mentions)
+        .setIcon(mentionsIcon)
         .setTag(TAB_MENTIONS_TAG)
         .setTabListener(new SupportFragmentTabListener<MentionsTimelineFragment>(R.id.flContainer, this,
             FRAGMENT_MENTIONS_TAG, MentionsTimelineFragment.class));
